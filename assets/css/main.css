@@ -729,6 +729,20 @@ ol {
   color: #b3261e;
 }
 
+/* Form-level status (success / error) — populated by assets/js/contact-form.js (T9). */
+.form-status {
+  margin: 0.25rem 0 0;
+  font-size: 0.9rem;
+}
+
+.form-status--success {
+  color: var(--color-navy);
+}
+
+.form-status--error {
+  color: #b3261e; /* matches .form-error */
+}
+
 /* --- Contact details -------------------------------------------------------- */
 .contact-details__list {
   margin-bottom: 1.5rem;

@@ -42,13 +42,13 @@
 
 ## Phase 4: Contact form
 
-- [ ] **T9 — Form validation + endpoint** — Files: `contact.html` (script), `assets/js/contact-form.js`, `api/contact.js`. Deps: T5. Acceptance: empty name / malformed email blocked with inline error; valid POSTs /api/contact → CONTACT_ENDPOINT; success resets form, failure preserves data. ~160 lines.
+- [x] **T9 — Form validation + endpoint** — Files: `contact.html` (script), `assets/js/contact-form.js`, `api/contact.js`. Deps: T5. Acceptance: empty name / malformed email blocked with inline error; valid POSTs /api/contact → CONTACT_ENDPOINT; success resets form, failure preserves data. ~160 lines.
 
 ## Phase 5: Payments
 
-- [ ] **T10 — create-preference endpoint** — Files: `api/create-preference.js`. Deps: T8. Acceptance: POST `{serviceId}` → `Preference.create` → 200 `{init_point}`; missing/invalid → 400; pricing PENDING → 400; creds from env only. ~70 lines.
-- [ ] **T11 — webhook/IPN endpoint** — Files: `api/webhook.js`. Deps: T10. Acceptance: `x-signature` HMAC-SHA256 validated (forged → 401); `@vercel/kv` set-if-not-exists dedupe (replay → 200 idempotent); KV unconfigured → 503 fail-closed. ~90 lines.
+- [x] **T10 — create-preference endpoint** — Files: `api/create-preference.js`. Deps: T8. Acceptance: POST `{serviceId}` → `Preference.create` → 200 `{init_point}`; missing/invalid → 400; pricing PENDING → 400; creds from env only. ~70 lines.
+- [x] **T11 — webhook/IPN endpoint** — Files: `api/webhook.js`. Deps: T10. Acceptance: `x-signature` HMAC-SHA256 validated (forged → 401); in-memory Map dedupe (replay → 200 idempotent); secret unconfigured → 503 fail-closed. ~90 lines.
 
 ## Phase 6: Deployment
 
-- [ ] **T12 — Deploy config + docs** — Files: `vercel.json` (rewrites/headers), README/docs. Deps: T11. Acceptance: 4 static pages from root; `/api/*` routes to functions; security/cache headers; docs cover env vars + sandbox flow. ~100 lines.
+- [x] **T12 — Deploy config + docs** — Files: `vercel.json` (verified), `README.md`. Deps: T11. Acceptance: 4 static pages from root; `/api/*` routes to functions (Vercel auto-route, no rewrites added); security/cache headers; docs cover env vars + sandbox flow. ~100 lines.
