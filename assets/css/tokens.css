@@ -1,0 +1,42 @@
+/* ==========================================================================
+   LEGALTY — Design Tokens
+   Firm design tokens preserved 1:1 from legalty.net.
+   Single source of truth for colors, typography, and breakpoints.
+   ========================================================================== */
+
+:root {
+  /* --- Brand colors ----------------------------------------------------- */
+  --color-navy: #003366;                    /* primary surfaces / header   */
+  --color-gold: #EDDB8C;                    /* accents / highlights         */
+  --color-charcoal: #2A2A2A;                /* body text                    */
+  --color-overlay: rgba(21, 40, 74, 0.95);  /* hero/section overlays        */
+  --color-light: #F7F7F7;                   /* page background / light areas*/
+
+  /* --- Text / muted grays ---------------------------------------------- */
+  --color-text: #2A2A2A;
+  --color-text-muted: #777777;
+  --color-text-light: #FFFFFF;
+  --color-gray-light: #E5E5E5;              /* borders / dividers           */
+
+  /* --- Typography families --------------------------------------------- */
+  --font-heading: 'Oswald', sans-serif;
+  --font-body: 'Open Sans', sans-serif;
+  --font-testimonial: 'Handlee', cursive;
+
+  /* --- Typography sizes ------------------------------------------------- */
+  --font-size-h1: 80px;
+  --font-size-h2: 50px;
+  --font-size-h3: 30px;
+  --font-size-body: 14px;
+  --font-size-testimonial: 20px;
+
+  /* --- Breakpoints ------------------------------------------------------ */
+  --breakpoint-1024: 1024px;
+  --breakpoint-810: 810px;
+  --breakpoint-600: 600px;
+
+  /* --- Layout ----------------------------------------------------------- */
+  --header-height: 80px;
+  --max-width: 1200px;
+  --gutter: 24px;
+}

@@ -1,0 +1,14 @@
+{
+  "name": "legalty-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "LEGALTY SERVICIOS JURÍDICOS INTEGRALES — static site with Mercado Pago Checkout Pro",
+  "type": "commonjs",
+  "scripts": {
+    "serve": "npx serve ."
+  },
+  "dependencies": {
+    "@vercel/kv": "^3.0.0",
+    "mercadopago": "^3.6.0"
+  }
+}

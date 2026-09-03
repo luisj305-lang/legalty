@@ -1,0 +1,38 @@
+schema: spec-driven
+
+context: |
+  Project: legalty — static website (plain HTML/CSS/JS, no framework), deploy target Vercel.
+  Goal: recreate legalty.net (LEGALTY SERVICIOS JURÍDICOS INTEGRALES), Mexican legal/financial advisory.
+  Stack: vanilla HTML/CSS/JS, no build toolchain, no runtime dependencies.
+  Environment: Node v24.19.0, npm 11.17.0; git available but repo NOT initialized; no Vercel CLI, no gh.
+  Architecture: static multi-page site; greenfield, no existing conventions.
+
+testing:
+  strict_tdd: false
+  reason: No test framework or test runner present for a static HTML/CSS/JS site; none will be invented.
+  unit: unavailable
+  integration: unavailable
+  e2e: unavailable (Chrome and Edge present; Playwright/Cypress not installed)
+
+rules:
+  proposal:
+    - Include rollback plan for risky changes
+  specs:
+    - Use Given/When/Then for scenarios
+    - Use RFC 2119 keywords (MUST, SHALL, SHOULD, MAY)
+  design:
+    - Document architecture decisions with rationale
+  tasks:
+    - Group by phase, use hierarchical numbering
+    - Keep tasks completable in one session
+  apply:
+    guidelines:
+      - Follow existing code patterns
+    tdd: false
+    test_command: ""
+  verify:
+    test_command: ""
+    build_command: ""
+    coverage_threshold: 0
+  archive:
+    - Warn before merging destructive deltas

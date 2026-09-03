@@ -1,0 +1,11 @@
+# Agent-local artifacts (index only, not source of truth)
+.atl/
+
+# Vercel
+.vercel/
+
+# Dependencies
+node_modules/
+
+# Environment (never commit credentials)
+.env
