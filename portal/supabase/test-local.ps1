@@ -1,4 +1,4 @@
-param([switch]$ApplyMigration)
+param([switch]$ApplyMigration, [switch]$ApplyCases)
 $ErrorActionPreference = 'Stop'
 $container = 'legalty-profiles-sql-test'
 $context = 'desktop-linux'
@@ -16,8 +16,13 @@ function Invoke-LocalSql([string]$Path) {
 if ($ApplyMigration) {
     Invoke-LocalSql (Join-Path $PSScriptRoot 'migrations/202609260001_trusted_profiles.sql')
 }
-$output = @(Invoke-LocalSql (Join-Path $PSScriptRoot 'tests/profiles.test.sql'))
-$output | Write-Output
-if ($output -match '^not ok' -or -not ($output -match '^1\.\.[1-9][0-9]*$')) {
-    throw 'pgTAP assertions failed or the final plan is missing.'
+if ($ApplyCases) {
+    Invoke-LocalSql (Join-Path $PSScriptRoot 'migrations/202609260002_case_reads.sql')
+}
+foreach ($test in Get-ChildItem (Join-Path $PSScriptRoot 'tests') -Filter '*.test.sql' | Sort-Object Name) {
+    $output = @(Invoke-LocalSql $test.FullName)
+    $output | Write-Output
+    if ($output -match '^not ok' -or -not ($output -match '^1\.\.[1-9][0-9]*$')) {
+        throw 'pgTAP assertions failed or the final plan is missing.'
+    }
 }

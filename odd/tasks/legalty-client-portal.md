@@ -204,14 +204,8 @@ Next unresolved decisions: schema and operating constraints before persistence/a
 
 ### ODD-03c writer evidence
 
-- REST contract verified against official Supabase Auth OpenAPI and `auth-js/GoTrueAdminApi.ts`: paginated list and direct user readback; POST admin creation confirmed in the official client source. No SDK dependency added.
-- RED: `node --test portal/tests/bootstrap-test-users.test.mjs` exited 1 with `ERR_MODULE_NOT_FOUND` before bootstrap source existed (module-load RED, not assertion-level RED).
-- GREEN: initial suite passed 7/7; bounded-pagination and uncertain-readback coverage expanded final suite to 9/9, exit 0. Synthetic mock credentials only; no real network or CLI session in tests.
-- Final regressions all exit 0: `node --test portal/tests/access-policy.test.cjs` 9/9; `npm.cmd --prefix portal/web run test` 4/4; `npm.cmd test` 5/5.
-- Bootstrap pins the HTTPS project host, rejects redirects, bounds each request/CLI call to 15 seconds and listing to 100 pages of 100. Duplicate/repeated pages, existing metadata conflicts, malformed results, and missing credentials fail closed before mutation. Creation attempts are never retried; uncertain POST or direct readback stops with safe partial states.
-- Password accepted only through the operator process environment in CLI use, omitted from the child CLI environment; key retrieval stdout stays transient. Results contain only fixed requested identities, desired roles, and safe state/reason strings. No raw exceptions, provider bodies, passwords, or keys are printed/persisted.
-- Remote execution and provisioning proof remain pending parent review. No live inspect/create invocation was run. Staging flags do not enforce provider account disablement or operational privileges; real sign-in, profile authorization, MFA, and password-change enforcement remain unimplemented.
-
+- Official Auth OpenAPI/auth-js REST verified, no SDK dependency. RED bootstrap runner exit1 ERR_MODULE_NOT_FOUND before source; GREEN7 then9/9 expanded pagination/readback. Policy9/9,app4/4,root5/5 regressions exit0. Synthetic tests only; worker did not provision remotely.
+- Pinned HTTPS host/no redirects;15s request/CLI limits,100pages of100. Duplicate/repeated/malformed/conflicting identities or missing credentials fail closed before writes. No creation retry after uncertain outcome. Password env-only, withheld from CLI child; transient key stdout, sanitized fixed identities/states only. Staging flags confer no operational authorization. Parent provisioning proof follows.
 ### ODD-03c parent verification and provisioning
 
 - Independent verifier passed 9/9 bootstrap tests plus synthetic cross-page duplicate, malformed identity, and malformed credential-loader checks. Parent repeated the 9/9 test suite successfully.
@@ -262,10 +256,7 @@ Next unresolved decisions: schema and operating constraints before persistence/a
 - Release blocker: parent dry upload included ignored DPAPI file, no upload occurred (memory1395). Next deployment slice must add portal/web/.vercelignore exclusions for .env*, nested .env*, and *.dpapi and assert actual dry-upload inventory excludes them. SQL scope unchanged.
 ### ODD-03e.0 initial harness evidence
 
-- Branch `feature/portal-07-trusted-profiles` from `5f3903e`. Docker Desktop started hidden; local desktop-linux engine 29.8.0 ready, no OS changes. CLI 2.117.0 initialized SQL-only `portal/supabase` (DB 55422, shadow 55420; initially unused), ignored temp state, no linked project. CLI test-db help confirmed pgTAP support.
-- Initial database-only start hit 240s download deadline; authorized cached retry hit 600s, both exit124. Only spawned CLI process trees terminated. Image `public.ecr.aws/supabase/postgres:17.6.1.167` completed and container `supabase_db_legalty-portal-sql` appeared healthy after retry. Actual binding was 0.0.0.0/[::]:55422 despite isolated bridge `legalty-portal-sql-loopback` host_binding_ipv4=127.0.0.1. CLI overrides this default; it is not safe isolation.
-- Stopped only that container, exit0; readback Exited(0), no published ports. No SQL, migrations, secrets, or real data used. Image, stopped container/volume, network, Docker preserved. SQL and regressions not run then; diffcheck passed; no commit. Root .gitignore diff untouched; only portal/supabase/.gitignore created. Explicit no-host-port recovery now supersedes retry plan.
-- Sources: https://supabase.com/docs/reference/cli/supabase-db-start ; https://supabase.com/docs/guides/local-development/cli/config ; https://docs.docker.com/engine/network/drivers/bridge/ .
+- Docker29.8.0/CLI2.117.0 ready without OS changes. CLI db-start timed out240s then600s; downloaded Postgres17.6.1.167 but exposed0.0.0.0/[::]:55422 despite bridge loopback default. Stopped only supabase_db_legalty-portal-sql, exit0, Exited(0), no ports; preserved image/volume/network. Superseded by verified network-none Docker-exec harness above. No SQL/data/secret operations during initial attempts; root.gitignore untouched. Config/temp ignored. Source: https://supabase.com/docs/reference/cli/supabase-db-start .
 ## Bounded next work unit: ODD-03a access policy
 
 - [x] ODD-03a: pure deny-by-default case and record read policy independently verified; commit 0cdf01c. No authentication endpoint or database access yet.
@@ -308,3 +299,11 @@ Next unresolved decisions: schema and operating constraints before persistence/a
 - Strict TDD domain RED/GREEN, app/typecheck/build/no-provider HTTP unauth+origin checks, portal/root regressions and authorized dry manifest. Existing inactive profiles stay pending. Forecastunder400; parent native review/cloud; rollback scoped MFA modules/tests/docs.
 - Prior combined deploy/password candidate (375 authored) approved by four native lenses, no findings; acknowledgement burned review-0b8df25364a572db for b46bb03 against f83445d. Parent27tests passed. This is not authority for the new MFA candidate.
 - Evidence: RED27pass/1fail missing MFA module; then assertion RED30/1 for SDK-prefixed QR. Installed auth-js prepends data:image/svg+xml;utf-8; normalized and safely image-encoded. GREEN31/31, typecheck/build/HTTP smoke, root5/5, portal21/21 with fresh dry28files all exit0. No remote factor mutation; server stopped. Abandoned unverified factors require support; no removal. Commit `308e01e` (233 authored changes); hosted human-device verification and new native review pending.
+
+## ODD-04a case persistence
+
+- [ ] ODD-04a.1: child feature/portal-11-case-core from cf69179; delegated schema+read-RLS/tests first. Cases contain reference/title/client-visible description/status/next action/timestamps/creator, client and staff links. Private fixed-search-path SECURITY DEFINER helpers take no caller identity; fresh active/nonrotation trusted profile and JWT AAL gate admin/staff2, client1/2. Nonrecursive own membership/assigned scope, clients never see other membership identities. No operational writes exposed.
+- [ ] ODD-04a.2: child follow-up atomic admin-create/assigned-update RPCs, participant-role validation, immutable internal audit and rollback tests. Deferred coherently, not omitted from overall feature.
+- Strict SQL RED before schema, GREEN real roles/crossclient/crossstaff/adminAAL/inactive/rotation/metadata/malformed/FK/write denial, baseline63SQL and app31/typecheck. No remote data/migration, new secrets, deployment or native review. Rollback only local case schema/tests/docs; no destructive rollback against populated remote tables. Forecast300-400 authored first slice.
+- MFA candidate approved with acknowledgement burned review-89aa1144a887d783 at cf69179; parent31tests passed. Deferred follow-ups: verify-false test must explicitly use AAL2; lost enrollment response leaves pending factor with generic error. Neither reopened closed review.
+- ODD04a.1 evidence: RED missing cases exit1 before migration. Initial migration rolled back because local image lacks auth.jwt; read verified request.jwt.claims directly instead. GREEN case47/47+profile63/63; app31/31/typecheck exit0. No writes/RPC/audit yet; no remote changes. All synthetic fixture rows roll back. Commit pending.
