@@ -1,13 +1,13 @@
 import type { Access } from '../auth/access.ts';
 import { trustedOrigin } from '../auth/mutations.ts';
 
-type Role = 'client' | 'staff';
+export type ParticipantRole = 'client' | 'staff';
 export type CaseCreateInput = {
   reference: string; title: string; description: string; clientIds: string[]; staffIds: string[];
 };
 export interface CaseCreateSource {
   access(): Promise<Access>;
-  findParticipant(email: string, role: Role): Promise<unknown>;
+  findParticipant(email: string, role: ParticipantRole): Promise<unknown>;
   createCase(input: CaseCreateInput): Promise<unknown>;
 }
 
@@ -23,7 +23,7 @@ function field(form: FormData, name: string, maximum: number, required = true) {
   return ([...value].length > maximum || required && !value) ? null : value;
 }
 
-function emails(value: string, required: boolean) {
+export function participantEmails(value: string, required: boolean) {
   const values = value.split(/\r?\n/).map(item => item.trim()).filter(Boolean);
   const normalized = values.map(item => item.toLowerCase());
   if (required && values.length === 0 || values.length > 100 || new Set(normalized).size !== values.length ||
@@ -31,7 +31,7 @@ function emails(value: string, required: boolean) {
   return values;
 }
 
-function participant(value: unknown, expectedEmail: string, expectedRole: Role) {
+export function participantLookupId(value: unknown, expectedEmail: string, expectedRole: ParticipantRole) {
   if (!Array.isArray(value) || value.length !== 1 || !value[0] || typeof value[0] !== 'object') return null;
   const row = value[0] as Record<string, unknown>;
   if (typeof row.id !== 'string' || !uuid.test(row.id) || typeof row.email !== 'string' ||
@@ -52,8 +52,8 @@ export async function submitCase(form: FormData, origin: string | null,
   const clientText = field(form, 'clientEmails', 25500);
   const staffText = form.has('staffEmails') ? field(form, 'staffEmails', 25500, false) : '';
   if (reference === null || title === null || description === null || clientText === null || staffText === null) return failure;
-  const clientEmails = emails(clientText, true);
-  const staffEmails = emails(staffText, false);
+  const clientEmails = participantEmails(clientText, true);
+  const staffEmails = participantEmails(staffText, false);
   if (!clientEmails || !staffEmails || new Set([...clientEmails, ...staffEmails].map(item => item.toLowerCase())).size !==
       clientEmails.length + staffEmails.length) return failure;
 
@@ -63,10 +63,10 @@ export async function submitCase(form: FormData, origin: string | null,
     if (access.state === 'setup_pending') return '/account';
     if (access.state !== 'eligible' || access.role !== 'admin') return '/cases';
     const ids = new Set<string>();
-    const resolve = async (values: string[], role: Role) => {
+    const resolve = async (values: string[], role: ParticipantRole) => {
       const result: string[] = [];
       for (const exactEmail of values) {
-        const id = participant(await source.findParticipant(exactEmail, role), exactEmail, role);
+        const id = participantLookupId(await source.findParticipant(exactEmail, role), exactEmail, role);
         if (!id || ids.has(id)) return null;
         ids.add(id); result.push(id);
       }

@@ -2,7 +2,8 @@ import 'server-only';
 import { redirect } from 'next/navigation';
 import { serverClient } from '../supabase/next-client';
 import { accountAccess } from '../supabase/server';
-import { readCaseView } from './read';
+import { caseId, readCaseView } from './read';
+import { parseCaseParticipants } from './participants';
 
 export async function caseAdminAccess() {
   const client = await serverClient().catch(() => null);
@@ -30,4 +31,16 @@ export async function caseView(id?: string) {
   if (view.state === 'signed_out') redirect('/login');
   if (view.state === 'setup_pending') redirect('/account');
   return view;
+}
+
+export async function caseParticipants(id: string) {
+  if (!caseId(id)) return null;
+  const client = await serverClient().catch(() => null);
+  if (!client) redirect('/login');
+  const access = await accountAccess(client);
+  if (access.state === 'signed_out') redirect('/login');
+  if (access.state === 'setup_pending') redirect('/account');
+  if (access.role !== 'admin') redirect('/cases');
+  const { data, error } = await client.rpc('get_case_participants', { target_case: id });
+  return error ? null : parseCaseParticipants(data);
 }
