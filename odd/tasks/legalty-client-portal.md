@@ -267,19 +267,14 @@ Next unresolved decisions: schema and operating constraints before persistence/a
 - [x] ODD-03e.2: run scoped SQL isolation and regression verification; preserve exact SQL outcomes, not mocked authorization claims.
 - Authorization: user approved starting installed Docker Desktop/local Supabase and image downloads with local RAM/disk use. No remote CLI credentials/session, project linking, cloud operations, Windows/WSL feature changes, installation, reboot, or license acceptance. Preserve unrelated containers and application/environment files.
 - Harness scope: minimal supported database-only CLI path, isolated project ID, unused loopback-bound ports, no linked project. Inspect Docker context locally before engine calls; remote endpoints are prohibited. Verify published bindings and actual local `SELECT`/current database before claiming readiness.
-- Strict TDD remains enabled; e.0 config/resource bootstrap has no profile behavior. e.1 must demonstrate SQL RED before migrations. Planned runner: installed Supabase CLI `test db` against the isolated local instance; establish command capability first.
-- Bound startup/download waits. If Docker prerequisites block readiness, stop safely, preserve diagnostics, and report the exact action needed; do not silently install prerequisites or touch unrelated resources. No harness commit until functional outcome is observed; native review stays parent-owned.
+- Strict TDD proof and the final Docker-exec pgTAP runner are recorded below.
+- Docker startup was bounded; no OS changes or unrelated resources were touched.
 - Rollback: only this slice's local configuration/docs and its specifically identified local resources, with explicit stop/delete authorization where required. No application or remote identity rollback.
 
-### ODD-03e local continuation
-
-- Recover with a distinct container from the downloaded Supabase Postgres image, no host-published ports, and Docker exec SQL only. Never restart or delete the unsafe prior container. Inspect only nonsecret image/entrypoint metadata. Use real PostgreSQL roles/auth schema and pgTAP; record any fixture limitations.
-- Write role-scoped SQL tests and observe RED before the migration. Implement only `public.profiles`: UUID primary/FK to auth.users, constrained client/staff/admin role, inactive and password-change-required defaults, RLS own authenticated SELECT independent of MFA, no PUBLIC/anon/authenticated writes including column grants/upsert. No metadata trigger, real seeds, activation, business tables, or cloud calls.
-- Checks: actual SQL/pgTAP suite, `node --test portal/tests/*.test.*`, application test and typecheck. Target roughly 400 authored lines; preserve coherent tests over cosmetic size. No commit/native review in this handoff.
 ### ODD-03e local SQL verification
 
 - Distinct `legalty-profiles-sql-test` container uses downloaded Postgres17.6.1.167: network none, PortBindings{}, actual auth.users/auth.uid/anon/authenticated roles and pgTAP. SELECT returned postgres/postgres. Old unsafe container remains stopped. No production data or cloud operation.
-- SQL RED: test-local.ps1 exit1, missing public.profiles before migration. GREEN: -ApplyMigration exit0, 61 TAP assertions; expanded constraints and reran 63/63 exit0. Fixtures roll back. Node portal suites18/18, app21/21, typecheck all exit0. Build/live HTTP not rerun for SQL-only scope. Commit `9410b9e`: 228 authored changes, 7 scoped files; native assessment remains parent-owned.
+- SQL RED: test-local.ps1 exit1, missing public.profiles before migration. GREEN: -ApplyMigration exit0, 61 TAP assertions; expanded constraints and reran 63/63 exit0. Fixtures roll back. Node portal suites18/18, app21/21, typecheck all exit0. Build/live HTTP not rerun for SQL-only scope. Commit `9410b9e`: 228 authored changes, 7 scoped files; native review declined by user option 2 for this exact candidate; global RDD stays on.
 - Release blocker: parent dry upload included ignored DPAPI file, no upload occurred (memory1395). Next deployment slice must add portal/web/.vercelignore exclusions for .env*, nested .env*, and *.dpapi and assert actual dry-upload inventory excludes them. SQL scope unchanged.
 ### ODD-03e.0 initial harness evidence
 
@@ -309,3 +304,9 @@ Next unresolved decisions: schema and operating constraints before persistence/a
 - Runtime harness: N/A, isolated pure function with no routes or runtime consumer. UI/browser checks: pending and outside this unit. Identity/session security is not established by these tests.
 - Independent verification passed: 9/9 portal tests, 5/5 existing tests, 2,048 independent matrix combinations plus 31 malformed/null-prototype checks. Parent spot check passed 9/9; hashes of 15 existing files were unchanged. Native assessment unavailable (untracked inventory declaration required); no native review/receipt claimed. Implementation commit: 0cdf01c, 213 additions + 9 deletions = 222 authored changes. Final progress bookkeeping is a separate documentation commit in the same slice.
 - No deployment authorized; static-root exclusion and private runtime must be verified before release, and no real client data may be added here.
+
+## ODD-11a portal upload boundary
+
+- [ ] ODD-11a: delegated isolated upload protection on feature/portal-08-deploy-boundary from f83445d. Before source edits, observe dry inventory RED for the ignored DPAPI file. Add portal/web/.vercelignore and synthetic contract tests outside deployed app; exclude all env/DPAPI/tests/dependency/build-cache files while retaining application source and lockfile.
+- Only authorized Vercel dry inventory against legalty-portal project prj_lZmMHPq6OCsfnzXES2FIwywt3geL/susotech, using existing session; no upload, deploy, project mutation, or native review. Never read secret contents. Root website remains outside app cwd.
+- Strict TDD; checks: focused Node test, portal regressions, app tests/typecheck, real CLI dry manifest. Rollback only new exclusion/test/docs; removing protection reopens release blocker. Commit and mirror exact proof; parent owns subsequent release.- Evidence: dry RED included ignored DPAPI envelope; focused test exit1 before exclusions. First fix excluded contents but retained empty tests directory; explicit directory exclusions fixed it. Actual dry GREEN: 19 files, source/lock retained, no env/DPAPI/root website; no upload. Portal21/21 including manifest, app21/21 and typecheck exit0. Commit pending. Manifest test skips without LEGALTY_DRY_MANIFEST; live proof requires a fresh authorized dry run.

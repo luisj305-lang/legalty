@@ -1,0 +1,33 @@
+# Never upload environment files or encrypted credential envelopes.
+.env*
+**/.env*
+*.dpapi
+**/*.dpapi
+
+# Vercel builds from source and the exact package lock.
+node_modules
+**/node_modules
+node_modules/**
+**/node_modules/**
+.next
+**/.next
+.next/**
+**/.next/**
+.vercel
+**/.vercel
+.vercel/**
+**/.vercel/**
+.git
+**/.git
+.git/**
+**/.git/**
+tests
+**/tests
+tests/**
+**/tests/**
+coverage
+**/coverage
+coverage/**
+**/coverage/**
+*.tsbuildinfo
+**/*.tsbuildinfo
