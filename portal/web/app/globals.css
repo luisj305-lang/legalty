@@ -28,6 +28,14 @@ h2 { margin: 0 0 12px; font-size: 18px; }
 .guidance { max-width: 590px; margin-top: 24px; }
 footer { color: #b9c4d4; font-size: 12px; }
 
+a { color: #dce6f5; text-underline-offset: 4px; }
+.auth-form { display: grid; gap: 12px; max-width: 420px; margin-top: 28px; }
+input, button { font: inherit; padding: 12px; border: 1px solid #889ab4; border-radius: 6px; }
+input { color: #f0f2f6; background: #122238; min-width: 0; }
+button { color: #081426; background: #dce6f5; cursor: pointer; margin-top: 12px; }
+:focus-visible { outline: 3px solid #93c5fd; outline-offset: 4px; }
+[role="alert"] { color: #ffc9c9; }
+
 @media (max-width: 480px) {
   .portal-shell { padding: 28px 20px; }
   .access-card { margin: 44px 0; }

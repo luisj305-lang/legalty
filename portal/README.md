@@ -1,6 +1,6 @@
 # Portal foundations
 
-This folder contains a pure read-authorization policy and an isolated Next.js application foundation. The application currently shows an invitation-only, access-unavailable landing, not a working login or dashboard. No runtime consumer uses the policy yet.
+This folder contains a pure case-read policy and an isolated Next.js application. Existing invited accounts can sign in and sign out locally; verified users see only a setup-pending account page. No case/document/payment dashboard is enabled, and the case policy is not yet connected to operational routes.
 
 ## Application quick start
 
@@ -16,15 +16,15 @@ npm.cmd --prefix portal/web run build
 npm.cmd --prefix portal/web run start
 ```
 
-Set `NEXT_TELEMETRY_DISABLED=1` in the command environment for local checks. `dev` and `start` bind to loopback. After building, `node portal/web/tests/smoke.mjs` starts its own loopback server, checks the landing and an absent private route, and stops that process.
+Set `NEXT_TELEMETRY_DISABLED=1` for local checks. `dev` and `start` bind to loopback. For production builds run locally, explicitly set `PORTAL_ORIGIN` to the exact intended origin, such as `http://127.0.0.1:3000`. Production mutations without a configured origin are denied; only HTTPS or explicitly configured loopback HTTP origins are accepted. Development defaults to `http://127.0.0.1:3000`. Never derive this setting from request Host headers.
 
-No environment configuration is needed for this landing. The pure `parsePublicConfiguration` helper accepts only an HTTPS origin and a modern `sb_publishable_` key; it returns null on missing or malformed settings. Legacy JWT keys are intentionally unsupported. This is syntax validation, not verification of a project/key, identity, or authorization. It is not wired to the page, reads no environment by itself, and never connects to Supabase. Even valid settings do not enable login. Keep local `.env*` files untracked and never put service-role keys in public settings.
+Sign-in uses the ignored public Supabase URL/publishable-key configuration. The pure parser still validates syntax only; the server factory consumes it and uses no privileged keys. Missing configuration denies sign-in. Keep `.env*` untracked and never introduce service-role credentials into the application.
 
-Next: implement trusted session adapters, invitations, staff MFA, schema/RLS policies, and private storage after resolving their operating constraints. The static-root exclusion blocker still prevents release. This app has no payment or document access capabilities.
+After building, `node portal/web/tests/smoke.mjs` starts/stops a scoped ephemeral loopback server with explicit origin and empty provider settings. It checks logged-out redirects, native multipart form submission, generic sign-in failure, foreign-origin rejection, and absent business routes without provider calls. Parent live verification confirmed both requested accounts reach setup-pending and lose protected access after local logout; future live checks still require separately supplied transient credentials. Browser visual QA is unavailable.
 
 ### Session and profile prerequisites (ODD-03d.1)
 
-`web/lib/supabase/server.ts` constructs a fresh SSR client per request from validated public configuration and the caller's cookie bridge. The bridge must carry every cookie mutation and the supplied cache headers onto the final HTTP response, including redirects. Provider requests disable caching and have a ten-second deadline. No framework route consumes this adapter yet; refresh middleware/proxy and login/logout UI follow in ODD-03d.2.
+`web/lib/supabase/server.ts` constructs a fresh SSR client per request. The Next.js proxy refreshes cookies, propagates every cookie/cache header, and prevents caching auth responses. Login/account use native server-action forms, fixed local redirects, generic errors, and exact-origin validation. Logout uses local session scope, not other devices. Cookies are HTTP-only and SameSite=Lax, with Secure enabled for the configured HTTPS origin. Provider requests disable caching and have a ten-second deadline.
 
 `accountAccess` validates identity through `getUser`, then freshly selects only that identity's `profiles` row with the session client. Proposed profile columns are `id`, `role`, `active`, and `must_change_password`; migrations/RLS are not installed by this slice. Missing/error/malformed profiles, inactive users, required rotation, or insufficient assurance remain setup-pending. Staff/admin require AAL2; provider metadata never grants roles. `eligible` means prerequisites passed, not case access or operational authorization. All business routes remain absent.
 
@@ -76,7 +76,7 @@ node portal/scripts/bootstrap-test-users.mjs inspect tzgqcwnachuvzikxrozi
 
 Inspection uses the authorized CLI session to obtain a transient service-role key, reads all bounded pages, and prints only the two requested emails, desired roles, and safe states. It never writes. After independent review and operator authorization, replace `inspect` with `create` to create only missing identities. Existing conflicting identities block all creation; no password reset or metadata update is performed. Any uncertain creation/readback stops immediately: inspect read-only before deciding what to do, never blindly rerun create. Partial accounts are not automatically deleted.
 
-New users have confirmed email without an invitation send, with `desired_role`, `active: false`, and `must_change_password: true` in app metadata. These are staging intent, **not enforced account disablement, authorization, or password-change enforcement**. The portal still has no working sign-in. Trusted profiles, sessions, application authorization, and staff MFA remain required before operational access.
+New users have confirmed email without an invitation send, with `desired_role`, `active: false`, and `must_change_password: true` in app metadata. These are staging intent, **not enforced account disablement, authorization, or password-change enforcement**. Sign-in reaches setup-pending only. Trusted profiles, password rotation, application authorization, and staff MFA remain required before operational access.
 
 API contracts: [official Admin implementation](https://github.com/supabase/auth-js/blob/master/src/GoTrueAdminApi.ts) and [Auth REST specification](https://github.com/supabase/auth/blob/master/openapi.yaml). This script uses POST `/admin/users`, paginated GET `/admin/users`, and direct GET readback; it never calls invite, recovery, update, or delete endpoints. Remote provisioning is not proven by mocked tests and is pending parent execution.
 

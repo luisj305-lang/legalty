@@ -12,9 +12,10 @@ export default function Home() {
         <p className="intro">Estamos preparando un espacio para acompañar tus procesos
           y conectar cada avance con el equipo de Legalty.</p>
         <div className="notice">
-          <h2>Acceso todavía no disponible</h2>
-          <p>El ingreso será por invitación. Aún no es posible iniciar sesión,
-            consultar casos ni cargar documentos desde esta página.</p>
+          <h2>Acceso para cuentas invitadas</h2>
+          <p>Ya puedes iniciar sesión con tu cuenta existente. La consulta de casos
+            y la carga de documentos todavía no están habilitadas.</p>
+          <p><a href="/login">Iniciar sesión</a></p>
         </div>
         <p className="guidance">Si ya eres cliente, continúa usando tus canales
           habituales de atención con Legalty.</p>
