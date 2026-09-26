@@ -1,0 +1,48 @@
+﻿.login-layout { display: grid; grid-template-columns: 53fr 47fr; min-height: 100dvh; background: #faf9f6; }
+.login-story { position: relative; display: flex; flex-direction: column; justify-content: space-between; min-height: 100dvh; padding: 54px clamp(32px, 4.2vw, 76px); background: linear-gradient(90deg, rgb(5 20 36 / 46%), rgb(5 20 36 / 8%)), url('/login-architecture-v1.webp') center / cover; color: #f5f5f3; }
+.login-brand { align-self: flex-start; text-decoration: none; font: 44px Georgia, 'Times New Roman', serif; letter-spacing: 13px; color: #d9dde1; }
+.login-brand span { display: block; margin-top: 12px; font: 11px Arial, sans-serif; letter-spacing: 5px; }
+.login-message { margin: 80px 0; }
+.login-message h1 { font: normal clamp(42px, 4.4vw, 72px)/1.08 Georgia, 'Times New Roman', serif; letter-spacing: -1.8px; margin: 0 0 26px; }
+.login-message p { max-width: 570px; font-size: clamp(16px, 1.45vw, 22px); line-height: 1.65; letter-spacing: .3px; }
+.login-signature { font-size: 13px; letter-spacing: 2px; line-height: 1.6; margin: 0; }
+.login-signature::before { content: ''; display: block; width: 52px; height: 1px; background: #ccd2db; margin-bottom: 18px; }
+.login-panel { color-scheme: light; color: #0c192a; display: flex; flex-direction: column; padding: 64px clamp(28px, 5vw, 88px) 30px; }
+.login-content { width: 100%; max-width: 500px; margin: auto; padding: 38px 0; }
+.login-heading { text-align: center; }
+.login-lock { width: 34px; height: 44px; stroke: currentColor; stroke-width: 1.5; }
+.login-kicker { font-size: 11px; letter-spacing: 3px; color: #42516b; margin: 16px 0 28px; }
+.login-heading h2 { font: normal clamp(30px, 3.1vw, 48px)/1.15 Georgia, 'Times New Roman', serif; letter-spacing: -1.4px; margin: 0 0 12px; }
+.login-heading > p:last-child { color: #67738a; font-size: 18px; margin: 0; }
+.login-form { display: grid; gap: 26px; margin-top: 42px; }
+.login-form label { display: block; margin-bottom: 10px; font-size: 14px; font-weight: 600; }
+.login-form input { width: 100%; height: 54px; border: 1px solid #adb6c5; border-radius: 5px; background: transparent; color: #142137; padding: 14px 18px; }
+.login-form input::placeholder { color: #707c91; opacity: 1; }
+.login-form button { display: flex; align-items: center; justify-content: center; gap: 24px; min-height: 56px; margin-top: 14px; color: #fff; background: #0d2035; border: 1px solid #0d2035; border-radius: 5px; font: 20px Georgia, 'Times New Roman', serif; transition: background .15s; }
+.login-form button:hover { background: #21394f; }
+.login-form button span { font: 28px Arial, sans-serif; }
+.login-panel :focus-visible { outline: 3px solid #396a9b; outline-offset: 4px; }
+.login-assurance { text-align: center; color: #68758a; font-size: 12px; line-height: 1.6; margin: 24px 0 0; }
+.login-support { margin: 64px 0 0; border-top: 1px solid #d5dae1; padding-top: 24px; color: #58667f; text-align: center; font-size: 13px; line-height: 1.7; }
+.login-error { color: #922a2a; background: #fff0ee; border-left: 3px solid #922a2a; padding: 14px; line-height: 1.6; font-size: 14px; margin-top: 24px; }
+.login-footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; color: #647188; font-size: 11px; letter-spacing: .5px; }
+.login-footer a { color: #53627a; }
+@media (max-width: 900px) {
+  .login-brand { font-size: 32px; letter-spacing: 8px; }
+  .login-brand span { letter-spacing: 3px; font-size: 9px; }
+  .login-panel { padding: 36px 28px 24px; }
+  .login-story { padding: 40px 28px; }
+}
+@media (max-width: 680px) {
+  .login-layout { grid-template-columns: 1fr; }
+  .login-story { min-height: 300px; padding: 28px 24px; background-position: center 45%; }
+  .login-message { margin: 48px 0 0; }
+  .login-message h1 { font-size: 38px; letter-spacing: -1px; margin-bottom: 16px; }
+  .login-message p { font-size: 14px; margin-bottom: 0; }
+  .login-signature { display: none; }
+  .login-panel { padding: 28px 24px 24px; }
+  .login-content { padding: 16px 0 40px; }
+  .login-heading h2 { font-size: 34px; }
+  .login-form { margin-top: 32px; }
+  .login-support { margin-top: 36px; }
+}

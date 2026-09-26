@@ -4,11 +4,7 @@ Build connected client and staff experiences while preserving the current public
 
 ## Status and next action
 
-- ODD-01: draft prepared; parent structural readback passed; foundation commit `f59cbbd` (141 additions); architecture remains incomplete.
-- ODD-03a: isolated read policy implemented, independently verified, and committed as 0cdf01c. ODD-03 and the remaining main tasks remain incomplete.
-- ODD-03b: application foundation independently verified and committed as `8a99a4a`; visual browser QA remains pending, non-blocking for this scoped foundation.
-- ODD-03c: requested Auth identities staged and independently verified; commit `85165fd`. Next: ODD-03d real SSR sign-in/logout with setup-pending access only; trusted profiles, MFA, password rotation, and operational dashboards remain pending.
-- Engram mirror: maintained by parent persistence under `odd/legalty-client-portal/tasks`, including this full document and repository-relative locator.
+Current implementation and proof are recorded in the cumulative task sections below. Historical foundation boundaries remain completed; unfinished checklist items remain pending. Engram mirrors this full document under odd/legalty-client-portal/tasks.
 
 ## Objective, problem, and scope
 
@@ -305,3 +301,15 @@ Next unresolved decisions: schema and operating constraints before persistence/a
 - [x] ODD-04b.1/06: child feature/portal-13-case-dashboard from897a78a; real session/RLS list+detail and responsive navy/silver shell first. Fresh verified eligible access per request; signedout/login, pending/account. Only client-visible columns, honest first50 counts/truncation, empty/error/notfound states. Account eligible redirects cases; proxy covers nested cases/no-store. No fake controls or privileged operational client.
 - [ ] ODD-04b.2: create/update native forms and secure actions, exact-email participant resolution, roles/origin/input tests on immediate child slice. Deferred: user prioritizes immediate deployment; no further implementation now.
 - RED31/1 missing module; GREEN35app, typecheck/build/HTTP, portal21/root5, dry34files passed before user requested immediate deployment without further tests/polish. Commit6fcbc15 (242 authored); no mutation UI/native review. Prior writes approved/burned review-cfa6f3b478487aed;147SQLpassed. Deferred: update_case locks before auth.
+## Production login configuration correction
+
+- [x] Production environment correction (deployment verification pending): replace four production environment values with exact-byte stdin (no pipeline newline), retaining sensitive server secret and strict origin checks. Redeploy only legalty-portal. Observed failure: canonical-origin synthetic POST /login returns403; remote origin/URL/publishable key contain whitespace. No source/auth/password changes. Minimal acceptance: GET login200 and synthetic invalid native POST credentials redirect, not403. Route: delegated cloud execution; no additional test suite requested.
+
+
+## ODD-UI-01 approved login design
+
+- [x] Delegated visual-only login redesign, feature/portal-14-login-design: user approved generated architectural navy/ivory concept. Left53% photograph and silver wordmark, right47% accessible Spanish native login form, elegant serif headings and responsive mobile layout. Use standalone background, never screenshot UI.
+- Preserve existing login action, exact-origin validation, input bounds and generic error. No recovery/contact/privacy placeholder links, auth rewrite or real credentials. Focused visual-contract RED/GREEN and production build only; browser QA if available. Parent owns deployment; cloud configuration repair is independent.
+- Rollback scoped login presentation, asset and test only. Forecastunder250 authored; strict TDD remains enabled.
+
+- ODD-UI-01 evidence: focused node --test portal/web/tests/login-design.test.ts RED missing stylesheet, GREEN1/1; npm.cmd --prefix portal/web run build exit0 including TypeScript. New standalone WebP108822bytes. Initial sharp internal-path import failed; package entrypoint succeeded without dependencies. No auth source changes, no unsupported recovery/contact/privacy links. Desktop/mobile CSS implemented; browser visual QA not performed, parent release QA pending. All four cloud environment replacements exited0 per cloud worker; exact canonical origin/public URL/key verified remotely without whitespace, sensitive secret cannot be read back. Existing deployment retains previous values until parent redeploys.
