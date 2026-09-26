@@ -22,6 +22,12 @@ No environment configuration is needed for this landing. The pure `parsePublicCo
 
 Next: implement trusted session adapters, invitations, staff MFA, schema/RLS policies, and private storage after resolving their operating constraints. The static-root exclusion blocker still prevents release. This app has no payment or document access capabilities.
 
+### Session and profile prerequisites (ODD-03d.1)
+
+`web/lib/supabase/server.ts` constructs a fresh SSR client per request from validated public configuration and the caller's cookie bridge. The bridge must carry every cookie mutation and the supplied cache headers onto the final HTTP response, including redirects. Provider requests disable caching and have a ten-second deadline. No framework route consumes this adapter yet; refresh middleware/proxy and login/logout UI follow in ODD-03d.2.
+
+`accountAccess` validates identity through `getUser`, then freshly selects only that identity's `profiles` row with the session client. Proposed profile columns are `id`, `role`, `active`, and `must_change_password`; migrations/RLS are not installed by this slice. Missing/error/malformed profiles, inactive users, required rotation, or insufficient assurance remain setup-pending. Staff/admin require AAL2; provider metadata never grants roles. `eligible` means prerequisites passed, not case access or operational authorization. All business routes remain absent.
+
 ## Run the checks
 
 ```sh
