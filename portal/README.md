@@ -1,6 +1,6 @@
 # Portal foundations
 
-This folder contains a pure case-read policy and an isolated Next.js application. Existing invited accounts can sign in and sign out locally; verified users see only a setup-pending account page. No case/document/payment dashboard is enabled, and the case policy is not yet connected to operational routes.
+This folder contains a pure case-read policy and an isolated Next.js application. Existing invited accounts can sign in and sign out locally. Eligible users can open the authenticated case summary and case-detail routes, which read only their session-scoped, RLS-authorized case rows; users who have not met the security prerequisites remain setup-pending. Document and payment modules are not enabled.
 
 ## Application quick start
 
@@ -20,13 +20,13 @@ Set `NEXT_TELEMETRY_DISABLED=1` for local checks. `dev` and `start` bind to loop
 
 Sign-in uses the ignored public Supabase URL/publishable-key configuration. The pure parser still validates syntax only; the server factory consumes it and uses no privileged keys. Missing configuration denies sign-in. Keep `.env*` untracked and never introduce service-role credentials into the application.
 
-After building, `node portal/web/tests/smoke.mjs` starts/stops a scoped ephemeral loopback server with explicit origin and empty provider settings. It checks logged-out redirects, native multipart form submission, generic sign-in failure, foreign-origin rejection, and absent business routes without provider calls. Parent live verification confirmed both requested accounts reach setup-pending and lose protected access after local logout; future live checks still require separately supplied transient credentials. Browser visual QA is unavailable.
+After building, `node portal/web/tests/smoke.mjs` starts/stops a scoped ephemeral loopback server with explicit origin and empty provider settings. It checks logged-out redirects for protected routes, native multipart form submission, generic sign-in failure, foreign-origin rejection, and the absence of legacy operational routes without provider calls. Parent live verification confirmed both requested accounts reach setup-pending and lose protected access after local logout; future live checks still require separately supplied transient credentials. Browser visual QA is unavailable.
 
 ### Session and profile prerequisites (ODD-03d.1)
 
 `web/lib/supabase/server.ts` constructs a fresh SSR client per request. The Next.js proxy refreshes cookies, propagates every cookie/cache header, and prevents caching auth responses. Login/account use native server-action forms, fixed local redirects, generic errors, and exact-origin validation. Logout uses local session scope, not other devices. Cookies are HTTP-only and SameSite=Lax, with Secure enabled for the configured HTTPS origin. Provider requests disable caching and have a ten-second deadline.
 
-`accountAccess` validates identity through `getUser`, then freshly selects only that identity's `profiles` row with the session client. Proposed profile columns are `id`, `role`, `active`, and `must_change_password`; migrations/RLS are not installed by this slice. Missing/error/malformed profiles, inactive users, required rotation, or insufficient assurance remain setup-pending. Staff/admin require AAL2; provider metadata never grants roles. `eligible` means prerequisites passed, not case access or operational authorization. All business routes remain absent.
+`accountAccess` validates identity through `getUser`, then freshly selects only that identity's `profiles` row with the session client. Proposed profile columns are `id`, `role`, `active`, and `must_change_password`; migrations/RLS are not installed by this slice. Missing/error/malformed profiles, inactive users, required rotation, or insufficient assurance remain setup-pending. Staff/admin require AAL2; provider metadata never grants roles. `eligible` means prerequisites passed, not blanket case access or operational authorization. The case list and detail routes additionally rely on session-scoped RLS; other operational modules remain absent.
 
 ## Run the checks
 

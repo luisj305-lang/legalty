@@ -1,20 +1,31 @@
 import type { ReactNode } from 'react';
 import { logout } from '../login/actions';
+import styles from './cases.module.css';
 
 export const dynamic = 'force-dynamic';
 export default function CaseLayout({ children }: { children: ReactNode }) {
-  return <div className="workspace">
-    <a className="skip-link" href="#case-content">Saltar al contenido</a>
-    <aside className="workspace-nav">
-      <a href="/cases" className="workspace-brand"><span>L</span> LEGALTY<small>PORTAL PRIVADO</small></a>
-      <nav aria-label="Navegación principal">
-        <a href="/cases">Mis casos</a><a href="/setup/password">Contraseña</a><a href="/setup/mfa">Autenticador</a>
+  return <div className={styles.shell}>
+    <a className={styles.skipLink} href="#case-content">Saltar al contenido</a>
+    <header className={styles.header}>
+      <a href="/cases" className={styles.brand} aria-label="Legalty, resumen de casos">
+        <span className={styles.brandMark} aria-hidden="true">L</span>
+        <span>LEGALTY<small>Servicios Jurídicos Integrales S.A.S</small></span>
+      </a>
+      <span className={styles.portalName}>Portal de clientes</span>
+      <span className={styles.privateLabel}>Acceso privado</span>
+    </header>
+    <aside className={styles.sidebar}>
+      <nav className={styles.navigation} aria-label="Navegación principal">
+        <a href="/cases" aria-current="page" className={styles.activeLink}>Resumen de casos</a>
+        <a href="/setup/password">Configurar contraseña</a>
+        <a href="/setup/mfa">Configurar autenticador</a>
       </nav>
-      <div className="workspace-help"><p>Información protegida</p><small>Solo ves los casos autorizados para tu cuenta.</small></div>
-      <form action={logout}><button type="submit">Cerrar sesión</button></form>
+      <div className={styles.securityNote}><span>INFORMACIÓN PROTEGIDA</span><p>Solo ves los casos autorizados para tu cuenta.</p></div>
+      <form className={styles.logout} action={logout}><button type="submit">Cerrar sesión</button></form>
     </aside>
-    <div className="workspace-body"><header className="workspace-topbar"><span>Centro de seguimiento</span><span>Acceso privado</span></header>
-      <main id="case-content" className="workspace-main">{children}</main>
+    <div className={styles.content}>
+      <main id="case-content" className={styles.main}>{children}</main>
+      <footer className={styles.footer}>LEGALTY · Portal de clientes</footer>
     </div>
   </div>;
 }
