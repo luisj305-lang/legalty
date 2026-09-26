@@ -26,5 +26,6 @@ export default async function PasswordSetup({ searchParams }: {
       <button type="submit">Guardar contraseña</button>
     </form>
     <p><a href="/account">Volver a mi cuenta</a></p>
+    <p><a href="/setup/mfa">Verificar autenticador antes del cambio</a></p>
   </section></main>;
 }

@@ -59,11 +59,13 @@ try {
   const error = await (await fetch(`${address}/login?error=credentials`)).text();
   assert.match(error, /No fue posible iniciar sesión/);
   assert.doesNotMatch(error, /synthetic@example/);
-  const setup = await fetch(`${address}/setup/password`, { redirect: 'manual' });
-  assert.equal(setup.status, 307);
-  assert.equal(setup.headers.get('location'), '/login');
-  assert.match(setup.headers.get('cache-control'), /no-store/);
-  for (const route of ['login', 'account', 'setup/password']) {
+  for (const path of ['password', 'mfa']) {
+    const setup = await fetch(`${address}/setup/${path}`, { redirect: 'manual' });
+    assert.equal(setup.status, 307);
+    assert.equal(setup.headers.get('location'), '/login');
+    assert.match(setup.headers.get('cache-control'), /no-store/);
+  }
+  for (const route of ['login', 'account', 'setup/password', 'setup/mfa']) {
     const denied = await fetch(`${address}/${route}`, { method: 'POST', body,
       headers: { origin: 'https://foreign.example' }, redirect: 'manual' });
     assert.equal(denied.status, 403);
