@@ -65,7 +65,13 @@ try {
     assert.equal(setup.headers.get('location'), '/login');
     assert.match(setup.headers.get('cache-control'), /no-store/);
   }
-  for (const route of ['login', 'account', 'setup/password', 'setup/mfa']) {
+  for (const route of ['cases', 'cases/11111111-1111-4111-8111-111111111111']) {
+    const denied = await fetch(`${address}/${route}`, { redirect: 'manual' });
+    assert.equal(denied.status, 307);
+    assert.equal(denied.headers.get('location'), '/login');
+    assert.match(denied.headers.get('cache-control'), /no-store/);
+  }
+  for (const route of ['login', 'account', 'setup/password', 'setup/mfa', 'cases']) {
     const denied = await fetch(`${address}/${route}`, { method: 'POST', body,
       headers: { origin: 'https://foreign.example' }, redirect: 'manual' });
     assert.equal(denied.status, 403);

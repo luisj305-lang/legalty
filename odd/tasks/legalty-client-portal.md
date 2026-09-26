@@ -208,11 +208,7 @@ Next unresolved decisions: schema and operating constraints before persistence/a
 - Pinned HTTPS host/no redirects;15s request/CLI limits,100pages of100. Duplicate/repeated/malformed/conflicting identities or missing credentials fail closed before writes. No creation retry after uncertain outcome. Password env-only, withheld from CLI child; transient key stdout, sanitized fixed identities/states only. Staging flags confer no operational authorization. Parent provisioning proof follows.
 ### ODD-03c parent verification and provisioning
 
-- Independent verifier passed 9/9 bootstrap tests plus synthetic cross-page duplicate, malformed identity, and malformed credential-loader checks. Parent repeated the 9/9 test suite successfully.
-- Authorized read-only preflight returned both requested identities missing. A single create invocation returned both created, with direct provider readback for each. A separate subsequent inspect returned both existing with the expected staging flags; all three commands exited 0.
-- Only LEGALTY project `tzgqcwnachuvzikxrozi` was touched. No email, password reset, paid change, deployment, or SUSOTECH mutation occurred. Temporary password and project key were not written to repository files.
-- Native assessment remains unavailable due to untracked inventory; no native review or receipt claimed. Independent verification supplied the separate check. Commit `85165fd` contains 319 authored changes; operational login and actual role enforcement remain future work.
-
+- Independent and parent9/9 bootstrap passed, plus duplicate/malformed cases. Authorized preflight missingboth, one create/directreadback, subsequentinspect existing expectedflags, all0. Only LEGALTY; no email/reset/paid/deploy/SUSOTECH/secret persistence. Commit85165fd319authored; nativeassessment unavailable(untrackedinventory), no receipt. Stagedidentities alone granted no operations.
 ## Bounded next work unit: ODD-03d real sign-in with setup-pending access
 
 - [ ] ODD-03d: working Supabase SSR sign-in/logout locally, with an honest setup-pending account page and no operational dashboards. Plan prepared; source, checks, native review, and commit pending.
@@ -303,3 +299,9 @@ Next unresolved decisions: schema and operating constraints before persistence/a
 - Child feature/portal-12-case-writes from b3b9195. Admin-AAL2 create atomically validates unique nonempty client links and staff roles, creates case and audit; assigned staff/admin update locks case and writes timestamp/audit. Private immutable audit readable only scoped staff/admin. Exact-email admin-only participant lookup (matching requested role, max1) supplies first UI without profile enumeration. Reassignment deferred. No direct user writes or caller identity override.
 - Strict SQL RED/GREEN: denied caller/AAL/active/rotation, bad links/status, atomic rollback, successful audit and audit edit denial; baseline110SQL/app31/typecheck. No real data/cloud/native actions. Prior read candidate medium approved, acknowledgement burned review-7e2765df8cfb2a0b; parent110SQLpassed. Forecastunder400; rollback scoped migration/RPC/tests, preserve existing data.
 - ODD04a.2 evidence: RED exit1 missing RPC/audit before migration; GREEN47read+37write+63profile=147SQL, app31/typecheck exit0. Atomic auditfailure rollback proven; synthetic fixtures rollback. Exact-email picker included; reassignment/UI/auditreadRPC deferred. No remote changes/native invocation; no real data. Commit `a42a078` (221 authored changes); new native assessment parent-owned.
+
+## ODD-04b/06 case interface
+
+- [ ] ODD-04b.1/06: child feature/portal-13-case-dashboard from897a78a; real session/RLS list+detail and responsive navy/silver shell first. Fresh verified eligible access per request; signedout/login, pending/account. Only client-visible columns, honest first50 counts/truncation, empty/error/notfound states. Account eligible redirects cases; proxy covers nested cases/no-store. No fake controls or privileged operational client.
+- [ ] ODD-04b.2: create/update native forms and secure actions, exact-email participant resolution, roles/origin/input tests on immediate child slice. Deferred: user prioritizes immediate deployment; no further implementation now.
+- RED31/1 missing module; GREEN35app, typecheck/build/HTTP, portal21/root5, dry34files passed before user requested immediate deployment without further tests/polish. Source frozen; no mutation UI/native review. Prior writes approved/burned review-cfa6f3b478487aed;147SQLpassed. Deferred: update_case locks before auth.

@@ -7,6 +7,7 @@ export const dynamic = 'force-dynamic';
 export default async function Account({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
   const access = await serverClient().then(accountAccess).catch(() => ({ state: 'signed_out' as const }));
   if (access.state === 'signed_out') redirect('/login');
+  if (access.state === 'eligible') redirect('/cases');
   return <main className="portal-shell"><section className="access-card">
     <p className="eyebrow">LEGALTY · CUENTA VERIFICADA</p>
     <h1>Configuración pendiente</h1>

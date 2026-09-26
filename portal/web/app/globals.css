@@ -36,6 +36,60 @@ button { color: #081426; background: #dce6f5; cursor: pointer; margin-top: 12px;
 :focus-visible { outline: 3px solid #93c5fd; outline-offset: 4px; }
 [role="alert"] { color: #ffc9c9; }
 
+.workspace { display: grid; grid-template-columns: 240px minmax(0, 1fr); min-height: 100dvh; }
+.workspace-nav { display: flex; flex-direction: column; padding: 40px 24px; background: #0b182b; border-right: 1px solid #2a3a50; }
+.workspace-brand { text-decoration: none; letter-spacing: 3px; font-size: 19px; }
+.workspace-brand span { display: inline-block; padding: 6px 10px; border: 1px solid #b9c4d4; font-family: Georgia, serif; }
+.workspace-brand small { display: block; margin: 16px 0 44px; font-size: 10px; color: #a5b4c9; }
+.workspace-nav nav { display: grid; gap: 12px; }
+.workspace-nav nav a { padding: 12px; border-radius: 8px; text-decoration: none; }
+.workspace-nav nav a:hover { background: #20334d; }
+.workspace-help { margin-top: auto; padding-top: 60px; color: #b9c4d4; line-height: 1.6; }
+.workspace-nav button { width: 100%; }
+.workspace-body { min-width: 0; background: radial-gradient(ellipse at top right, #1e324d, #101c2e 65%); }
+.workspace-topbar { display: flex; justify-content: space-between; gap: 20px; padding: 24px 36px; border-bottom: 1px solid #344259; color: #becbdd; font-size: 13px; }
+.workspace-main { max-width: 1300px; padding: 40px 36px 72px; margin: auto; }
+.workspace-main h1 { font-size: clamp(30px, 4vw, 48px); overflow-wrap: anywhere; }
+.workspace-intro { color: #bdc9da; line-height: 1.7; }
+.case-metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 32px 0; }
+.case-metrics > div { border: 1px solid #45556b; border-radius: 12px; background: #18273c; padding: 22px; }
+.case-metrics span { display: block; color: #bdc9da; font-size: 13px; }
+.case-metrics strong { display: block; margin-top: 14px; font: normal 34px Georgia, serif; }
+.case-panel { margin-top: 24px; padding: 28px; background: #142238; border: 1px solid #415169; border-radius: 12px; line-height: 1.7; }
+.section-heading { display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+.section-heading span, .case-panel small { color: #bdc9da; font-size: 12px; }
+.case-empty { text-align: center; padding: 44px 16px; color: #cad5e4; }
+.case-list { padding: 0; margin: 12px 0 0; list-style: none; }
+.case-list li { display: flex; justify-content: space-between; gap: 24px; padding: 24px 0; border-top: 1px solid #384961; }
+.case-list h3 { margin: 6px 0; overflow-wrap: anywhere; }
+.case-list h3 a { text-decoration: none; }
+.case-list h3 a:hover { text-decoration: underline; }
+.case-list p { margin: 6px 0; color: #bac8da; overflow-wrap: anywhere; }
+.case-reference { font-size: 12px; color: #9fbbdf; letter-spacing: 1px; }
+.case-row-meta { display: grid; align-content: start; justify-items: end; gap: 12px; flex-shrink: 0; }
+.case-row-meta time { color: #acbcd2; font-size: 12px; }
+.case-badge { display: inline-block; border: 1px solid #667f9e; color: #c6ddf9; border-radius: 24px; padding: 4px 12px; font-size: 12px; white-space: nowrap; }
+.case-badge.waiting { color: #f1d49c; border-color: #8a744f; }
+.case-badge.closed { color: #b2ddc6; border-color: #507963; }
+.case-detail-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 24px; }
+.preserve-lines { white-space: pre-wrap; overflow-wrap: anywhere; }
+.skip-link { position: absolute; left: 16px; top: -80px; padding: 16px; background: #dce6f5; color: #081426; z-index: 10; }
+.skip-link:focus { top: 16px; }
+
+@media (max-width: 800px) {
+  .workspace { grid-template-columns: 1fr; }
+  .workspace-nav { padding: 20px; border-right: 0; border-bottom: 1px solid #344259; }
+  .workspace-brand small { margin: 8px 0 20px; }
+  .workspace-nav nav { display: flex; flex-wrap: wrap; }
+  .workspace-help { display: none; }
+  .workspace-nav button { width: auto; }
+  .workspace-topbar, .workspace-main { padding: 24px 20px; }
+  .case-metrics { grid-template-columns: repeat(2, 1fr); }
+  .case-detail-grid { grid-template-columns: 1fr; gap: 0; }
+  .case-list li { flex-direction: column; gap: 12px; }
+  .case-row-meta { display: flex; justify-content: space-between; align-items: center; }
+}
+
 @media (max-width: 480px) {
   .portal-shell { padding: 28px 20px; }
   .access-card { margin: 44px 0; }
