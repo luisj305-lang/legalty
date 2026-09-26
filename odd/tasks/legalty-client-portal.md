@@ -5,8 +5,8 @@ Build connected client and staff experiences while preserving the current public
 ## Status and next action
 
 - ODD-01: draft prepared; parent structural readback passed; foundation commit `f59cbbd` (141 additions); architecture remains incomplete.
-- ODD-03a: isolated read policy implemented and independently verified; work-unit commit pending. ODD-03 and the remaining main tasks remain incomplete.
-- Next: create the scoped access-policy commit, then resolve application/provider architecture before authentication integration.
+- ODD-03a: isolated read policy implemented, independently verified, and committed as 0cdf01c. ODD-03 and the remaining main tasks remain incomplete.
+- Next: resolve application/provider architecture before authentication integration; internal screen design and full login remain pending.
 - Engram mirror: maintained by parent persistence under `odd/legalty-client-portal/tasks`, including this full document and repository-relative locator.
 
 ## Objective, problem, and scope
@@ -99,7 +99,7 @@ Every task remains unchecked until its outcome, applicable checks, and work-unit
 
 - [ ] ODD-01 — draft prepared; structural readback passed; foundation commit: `f59cbbd`; final architecture decisions pending.
 - [ ] ODD-02 — pending; commit: none.
-- [ ] ODD-03 — ODD-03a pure policy writer-verified; authentication and policy commit pending; independent verification passed.
+- [ ] ODD-03 — ODD-03a pure policy writer-verified; policy commit 0cdf01c; independent verification passed; authentication remains pending.
 - [ ] ODD-04 — pending; commit: none.
 - [ ] ODD-05 — pending; commit: none.
 - [ ] ODD-06 — pending; commit: none.
@@ -115,7 +115,7 @@ Every task remains unchecked until its outcome, applicable checks, and work-unit
 - Known runner: `npm.cmd test`; parent-supplied baseline: 5 tests passed. `npm test` failed under PowerShell execution policy; use the explicit `.cmd` runner. Baseline tests do not prove a future portal implementation.
 - Foundation documentation: parent structural readback passed. ODD-03a functional checks are recorded below; runtime harness N/A because no runtime boundary or consumer exists. Browser checks remain pending for later UI work.
 - RDD: command printed off but exited with an unsafe `.git` authority-ownership error; effective status is uncertain/unavailable. Do not repair ownership or enable review automatically; preserve the error and follow applicable verification rules.
-- Forecast: several thousand authored additions plus deletions across the full feature. This is a planning estimate, not a measured diff. Running committed authored count: 141 (foundation commit `f59cbbd`); access-policy unit uncommitted.
+- Forecast: several thousand authored additions plus deletions across the full feature. This is a planning estimate, not a measured diff. Running committed authored count: 363 before final progress bookkeeping: foundation f59cbbd (141) plus access policy 0cdf01c (222). Slice 2 base: f59cbbd; only portal files and task updates belong to it.
 - Delivery strategy: `ask-on-risk`. Chain strategy: `feature-branch-chain`, explicitly accepted by the user. Tracker: `feature/legalty-client-portal`; slice 1: `feature/portal-01-foundation` targets tracker; slice 2: `feature/portal-02-access-policy` targets slice 1. No remote PR creation or merge is authorized.
 - Approximately 400 authored lines per task is a planning heuristic, not a cap. Never omit tests, compress code, or split inseparable behavior to meet it. Keep PR delivery boundaries and any required exceptions explicit.
 - Branch before work-unit commits on the default branch. Stage only owned paths after reviewing the diff; never sweep existing public-site changes or untracked assets/tests into a commit.
@@ -132,7 +132,7 @@ Next unresolved decisions: implementation stack/providers before dependent sourc
 
 ## Bounded next work unit: ODD-03a access policy
 
-- [ ] ODD-03a: pure deny-by-default case and record read policy independently verified; commit pending. No authentication endpoint or database access yet.
+- [x] ODD-03a: pure deny-by-default case and record read policy independently verified; commit 0cdf01c. No authentication endpoint or database access yet.
 - Route: delegated writer (multiple non-trivial files); independent verification required if native assessment is unavailable.
 - Scope: new portal/domain/access-policy.cjs, portal/tests/access-policy.test.cjs, portal/README.md, plus this progress document. No existing website files, package files, or payment APIs changed.
 - Checks: observed RED then GREEN with node --test portal/tests/access-policy.test.cjs; existing regression suite npm.cmd test; parent spot check and independent read-only verification.
@@ -150,5 +150,5 @@ Next unresolved decisions: implementation stack/providers before dependent sourc
 - REFACTOR: clarified malformed-visibility test construction and added inherited-principal denial coverage; same command passed 9/9 again, with 0 failures.
 - Regression: `npm.cmd test` passed 5/5 with 0 failures both after implementation and after test cleanup. Root test discovery does not include portal tests; run both commands.
 - Runtime harness: N/A, isolated pure function with no routes or runtime consumer. UI/browser checks: pending and outside this unit. Identity/session security is not established by these tests.
-- Independent verification passed: 9/9 portal tests, 5/5 existing tests, 2,048 independent matrix combinations plus 31 malformed/null-prototype checks. Parent spot check passed 9/9; hashes of 15 existing files were unchanged. Native assessment unavailable (untracked inventory declaration required); no native review/receipt claimed. Commit ID and final authored count pending.
+- Independent verification passed: 9/9 portal tests, 5/5 existing tests, 2,048 independent matrix combinations plus 31 malformed/null-prototype checks. Parent spot check passed 9/9; hashes of 15 existing files were unchanged. Native assessment unavailable (untracked inventory declaration required); no native review/receipt claimed. Implementation commit: 0cdf01c, 213 additions + 9 deletions = 222 authored changes. Final progress bookkeeping is a separate documentation commit in the same slice.
 - No deployment authorized; static-root exclusion and private runtime must be verified before release, and no real client data may be added here.
