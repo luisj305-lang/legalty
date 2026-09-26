@@ -18,6 +18,16 @@ test('authenticated shell exposes only working navigation and logout', () => {
   assert.doesNotMatch(layout, /href="#"|\/documents|\/messages|\/appointments|\/services|\/payments/);
 });
 
+test('authenticator setup is consistently optional without removing enrollment', () => {
+  const account = source('../app/account/page.tsx');
+  const password = source('../app/setup/password/page.tsx');
+  const mfa = source('../app/setup/mfa/page.tsx');
+  const layout = source('../app/cases/layout.tsx');
+  for (const page of [account, password, mfa, layout]) assert.match(page, /autenticador opcional/i);
+  assert.doesNotMatch(password, /antes del cambio/i);
+  assert.match(mfa, /<MfaForm factors=/);
+});
+
 test('dashboard presentation keeps metrics and links grounded in authorized case rows', () => {
   const page = source('../app/cases/page.tsx');
   assert.match(page, /import styles from ['"]\.\/cases\.module\.css['"]/);

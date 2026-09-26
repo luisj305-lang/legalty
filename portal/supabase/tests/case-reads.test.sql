@@ -41,7 +41,7 @@ select ok(not exists(select 1 from pg_proc, lateral aclexplode(proacl) a
 set local role authenticated;
 select set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000001',true);
 select set_config('request.jwt.claims','{"aal":"aal1"}',true);
-select is((select count(*) from public.cases),0::bigint,'Admin AAL1 denied');
+select is((select count(*) from public.cases),2::bigint,'Admin AAL1 reaches administrator scope');
 select set_config('request.jwt.claims','{"aal":"aal2"}',true);
 select is((select count(*) from public.cases),2::bigint,'Admin AAL2 sees all');
 select set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000002',true);
@@ -50,7 +50,7 @@ select is((select count(*) from public.case_clients),2::bigint,'Assigned staff s
 select set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000003',true);
 select results_eq('select reference from public.cases', $$values ('TEST-B'::text)$$,'Other staff sees only other assignment');
 select set_config('request.jwt.claims','{"aal":"aal1"}',true);
-select is((select count(*) from public.cases),0::bigint,'Staff AAL1 denied');
+select results_eq('select reference from public.cases', $$values ('TEST-B'::text)$$,'Staff AAL1 remains assignment-scoped');
 select set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000004',true);
 select results_eq('select reference from public.cases', $$values ('TEST-A'::text)$$,'Client sees linked case only');
 select is((select count(*) from public.case_clients),1::bigint,'Client sees only own membership');
@@ -61,6 +61,8 @@ select set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000006'
 select results_eq('select reference from public.cases', $$values ('TEST-B'::text)$$,'Other client sees only own case');
 select set_config('request.jwt.claims','{}',true);
 select is((select count(*) from public.cases),0::bigint,'Missing AAL denied');
+select set_config('request.jwt.claims','{"aal":"unknown"}',true);
+select is((select count(*) from public.cases),0::bigint,'Unknown AAL denied');
 select set_config('request.jwt.claims','{"aal":"aal2"}',true);
 select throws_ok('update public.cases set title=''Escalation''','42501',null,'Direct case update denied');
 select throws_ok('delete from public.case_clients','42501',null,'Direct membership removal denied');

@@ -31,7 +31,7 @@ export async function resolveAccess(source: AccessSource): Promise<Access> {
     if (profile.id !== userId || profile.active !== true || profile.must_change_password !== false ||
         (role !== 'client' && role !== 'staff' && role !== 'admin')) return pending;
     const assurance = await source.readAssurance();
-    if (assurance !== 'aal2' && !(role === 'client' && assurance === 'aal1')) return pending;
+    if (assurance !== 'aal1' && assurance !== 'aal2') return pending;
     return { state: 'eligible', userId, role };
   } catch {
     // Absent tables, revoked access, malformed data and provider errors fail closed.

@@ -10,7 +10,7 @@ export default async function MfaSetup() {
   const factors = await client.auth.mfa.listFactors().catch(() => null);
   return <main className="portal-shell"><section className="access-card">
     <p className="eyebrow">LEGALTY · SEGURIDAD</p><h1>Verificación en dos pasos</h1>
-    <p>Configura o verifica tu autenticador. Esto no activa tu cuenta ni habilita casos o documentos.</p>
+    <p>Configura o verifica tu autenticador opcional. Esto no activa tu cuenta ni habilita casos o documentos.</p>
     {factors?.data && !factors.error ? <MfaForm factors={factors.data.all
       .filter(f => f.factor_type === 'totp').map(({ id, status, factor_type }) => ({ id, status, factor_type }))} /> :
       <p role="alert">No fue posible consultar tus autenticadores. Intenta nuevamente.</p>}

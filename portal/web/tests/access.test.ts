@@ -36,12 +36,12 @@ test('provider role metadata never substitutes for the trusted profile', async (
   assert.equal(result.state, 'setup_pending');
 });
 
-test('staff/admin need AAL2; clients need valid assurance and active profile', async () => {
+test('every valid role accepts only AAL1 or AAL2 with an active eligible profile', async () => {
   for (const role of ['client', 'staff', 'admin']) {
     for (const assurance of ['aal1', 'aal2', null, 'unknown']) {
       const result = await resolveAccess(source({ readOwnProfile: async () => ({ ...profile, role }),
         readAssurance: async () => assurance }));
-      const allowed = assurance === 'aal2' || role === 'client' && assurance === 'aal1';
+      const allowed = assurance === 'aal1' || assurance === 'aal2';
       assert.equal(result.state, allowed ? 'eligible' : 'setup_pending');
     }
   }

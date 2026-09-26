@@ -1,6 +1,7 @@
-param([switch]$ApplyMigration, [switch]$ApplyCases, [switch]$ApplyWrites)
+param([switch]$ApplyMigration, [switch]$ApplyCases, [switch]$ApplyWrites,
+    [switch]$ApplyMfaPolicy, [string]$Container = 'legalty-profiles-sql-test')
 $ErrorActionPreference = 'Stop'
-$container = 'legalty-profiles-sql-test'
+$container = $Container
 $context = 'desktop-linux'
 $state = & docker --context $context inspect $container --format '{{json .HostConfig.PortBindings}}|{{.HostConfig.NetworkMode}}|{{.State.Running}}'
 if ($LASTEXITCODE -ne 0 -or $state -ne '{}|none|true') {
@@ -21,6 +22,9 @@ if ($ApplyCases) {
 }
 if ($ApplyWrites) {
     Invoke-LocalSql (Join-Path $PSScriptRoot 'migrations/202609260003_case_writes.sql')
+}
+if ($ApplyMfaPolicy) {
+    Invoke-LocalSql (Join-Path $PSScriptRoot 'migrations/202609260004_temporarily_allow_aal1.sql')
 }
 foreach ($test in Get-ChildItem (Join-Path $PSScriptRoot 'tests') -Filter '*.test.sql' | Sort-Object Name) {
     $output = @(Invoke-LocalSql $test.FullName)

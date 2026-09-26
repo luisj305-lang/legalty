@@ -37,12 +37,12 @@ test('adapter calls getUser then fresh own-profile selection, never getSession/m
     from: (table: string) => { calls.push(table); return {
       select: (fields: string) => { calls.push(fields); return {
         eq: (field: string, id: string) => { calls.push([field, id]); return {
-          maybeSingle: async () => ({ data: { id, role: 'client', active: true, must_change_password: false }, error: null }),
+          maybeSingle: async () => ({ data: { id, role: 'admin', active: true, must_change_password: false }, error: null }),
         }; },
       }; },
     }; },
   } as unknown as SupabaseClient;
-  assert.equal((await accountAccess(client)).state, 'eligible');
+  assert.deepEqual(await accountAccess(client), { state: 'eligible', userId: 'verified', role: 'admin' });
   assert.deepEqual(calls, ['profiles', 'id,role,active,must_change_password', ['id', 'verified']]);
 });
 

@@ -15,7 +15,7 @@ export default async function Account({ searchParams }: { searchParams: Promise<
     <p>El equipo debe completar la configuración de acceso y seguridad antes de habilitar el portal.</p>
     {(await searchParams).error && <p role="alert">No fue posible cerrar sesión. Intenta nuevamente.</p>}
     <p><a href="/setup/password">Configurar mi contraseña</a></p>
-    <p><a href="/setup/mfa">Configurar o verificar autenticador</a></p>
+    <p><a href="/setup/mfa">Configurar o verificar autenticador opcional</a></p>
     <form action={logout}><button type="submit">Cerrar sesión</button></form>
   </section></main>;
 }
