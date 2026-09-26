@@ -59,6 +59,21 @@ Apply authorization before exposing list results, details, exports, or document 
 
 ## Deployment and rollback
 
+### Staged test identities (operator-only)
+
+`scripts/bootstrap-test-users.mjs` is restricted to project `tzgqcwnachuvzikxrozi` and the two approved identities. It is not an application endpoint. Set `SUPABASE_CLI_PATH` to the authorized official CLI executable; create mode additionally requires `LEGALTY_BOOTSTRAP_PASSWORD` injected into the process environment. Never put passwords in commands, files, screenshots, or logs.
+
+```sh
+node --test portal/tests/bootstrap-test-users.test.mjs
+node portal/scripts/bootstrap-test-users.mjs inspect tzgqcwnachuvzikxrozi
+```
+
+Inspection uses the authorized CLI session to obtain a transient service-role key, reads all bounded pages, and prints only the two requested emails, desired roles, and safe states. It never writes. After independent review and operator authorization, replace `inspect` with `create` to create only missing identities. Existing conflicting identities block all creation; no password reset or metadata update is performed. Any uncertain creation/readback stops immediately: inspect read-only before deciding what to do, never blindly rerun create. Partial accounts are not automatically deleted.
+
+New users have confirmed email without an invitation send, with `desired_role`, `active: false`, and `must_change_password: true` in app metadata. These are staging intent, **not enforced account disablement, authorization, or password-change enforcement**. The portal still has no working sign-in. Trusted profiles, sessions, application authorization, and staff MFA remain required before operational access.
+
+API contracts: [official Admin implementation](https://github.com/supabase/auth-js/blob/master/src/GoTrueAdminApi.ts) and [Auth REST specification](https://github.com/supabase/auth/blob/master/openapi.yaml). This script uses POST `/admin/users`, paginated GET `/admin/users`, and direct GET readback; it never calls invite, recovery, update, or delete endpoints. Remote provisioning is not proven by mocked tests and is pending parent execution.
+
 No deployment is authorized. The repository currently serves a static root; do not place private documents, credentials, or real client data here. Establish and verify a separate private runtime and deployment exclusions before release. Ignore rules alone are not access control.
 
 Rollback the application foundation independently by reverting `portal/web/` and its README/task entries. Preserve the policy. Rollback the earlier policy unit independently through its policy/test files and related documentation. Neither unit changes the public website. Full authentication and provider integration remain pending.

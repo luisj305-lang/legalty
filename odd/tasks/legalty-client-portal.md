@@ -6,7 +6,8 @@ Build connected client and staff experiences while preserving the current public
 
 - ODD-01: draft prepared; parent structural readback passed; foundation commit `f59cbbd` (141 additions); architecture remains incomplete.
 - ODD-03a: isolated read policy implemented, independently verified, and committed as 0cdf01c. ODD-03 and the remaining main tasks remain incomplete.
-- Next: ODD-03b isolated application foundation using the approved stack; internal screen design, schema, and full login remain pending.
+- ODD-03b: application foundation independently verified and committed as `8a99a4a`; visual browser QA remains pending, non-blocking for this scoped foundation.
+- Next: ODD-03c staged test identities in the authorized separate Supabase project; internal screen design, schema, trusted profiles, sessions, MFA, and working sign-in remain pending.
 - Engram mirror: maintained by parent persistence under `odd/legalty-client-portal/tasks`, including this full document and repository-relative locator.
 
 ## Objective, problem, and scope
@@ -20,7 +21,8 @@ Out of initial scope: subscriptions, native mobile apps, advanced electronic sig
 ### Authorization and preservation
 
 - User authorized beginning local ODD implementation of both portal and internal panel; initial documentation is followed by a bounded pure-domain authorization work unit; login and provider integration remain pending.
-- Local feature work and eventual Conventional Commits are in scope; push, PR creation, merge, deployment, remote provisioning, and credential/session use require separate authorization.
+- Local feature work and Conventional Commits are in scope. User additionally authorized the separate Free Supabase project `tzgqcwnachuvzikxrozi` in `us-east-1`, organization LEGALTY, and the two test Auth identities specified in ODD-03c. Use only its authorized official CLI session and transient project key for that operation. No paid changes or unrelated-project operations are authorized.
+- A separate empty Vercel project exists; no deployment occurred. Push, PR creation, merge, deployment, and any broader remote or credential use remain outside current authorization.
 - Preserve the root static site. Do not bundle its existing uncommitted changes or untracked tests/assets into portal commits.
 - Recorded base: `master` at `b198daa6e0e19c52cbf799bfa947443bc0fe4d50`; recheck current state before branching or staging.
 - Never store actual private client documents, secrets, or production data under the static root or in this task document.
@@ -44,7 +46,7 @@ The user approved Next.js with TypeScript, Supabase Auth, Supabase PostgreSQL wi
 
 Application-server authorization must be backed by matching RLS policies; existing pure-domain tests are not evidence of database enforcement. Provider adapters remain separate from domain rules. Managed providers reduce operational work but introduce provider dependencies. Infrastructure still has costs despite one-time client billing.
 
-Before production: resolve database schema and lifecycle constraints, hosting region and budget, retention, independent document backups and restore drills, notification channel, and deployment exclusions. Supabase database backups do not include Storage objects. No remote project, account, credential use, or deployment is authorized by this approval.
+Before production: resolve database schema and lifecycle constraints, production budget, retention, independent document backups and restore drills, notification channel, and deployment exclusions. Supabase database backups do not include Storage objects. The later narrow remote authorization above supersedes the original local-only scope; it does not authorize deployment or operational access.
 
 Verified reference sources supplied by the parent:
 - [Next.js authentication](https://nextjs.org/docs/app/guides/authentication): server-side authentication and authorization boundaries.
@@ -126,8 +128,9 @@ Every task remains unchecked until its outcome, applicable checks, and work-unit
 - Known runner: `npm.cmd test`; parent-supplied baseline: 5 tests passed. `npm test` failed under PowerShell execution policy; use the explicit `.cmd` runner. Baseline tests do not prove a future portal implementation.
 - Foundation documentation: parent structural readback passed. ODD-03a functional checks are recorded below; runtime harness N/A because no runtime boundary or consumer exists. Browser checks remain pending for later UI work.
 - RDD: command printed off but exited with an unsafe `.git` authority-ownership error; effective status is uncertain/unavailable. Do not repair ownership or enable review automatically; preserve the error and follow applicable verification rules.
-- Forecast: several thousand authored additions plus deletions across the full feature. This is a planning estimate, not a measured diff. Running committed authored count: 363 before final progress bookkeeping: foundation f59cbbd (141) plus access policy 0cdf01c (222). Slice 2 base: f59cbbd; only portal files and task updates belong to it.
+- Forecast: several thousand authored additions plus deletions across the full feature. Known work-unit authored subtotal: 697, excluding intervening progress-bookkeeping commits: foundation `f59cbbd` (141), access policy `0cdf01c` (222), application foundation `8a99a4a` (334). The last commit additionally contains 1,400 generated lockfile lines, excluded from authored count. Reconcile bookkeeping before reporting the complete branch total.
 - Delivery strategy: `ask-on-risk`. Chain strategy: `feature-branch-chain`, explicitly accepted by the user. Tracker: `feature/legalty-client-portal`; slice 1: `feature/portal-01-foundation` targets tracker; slice 2: `feature/portal-02-access-policy` targets slice 1; slice 3: `feature/portal-03-app-foundation` targets slice 2, starting at `24a41db`. No remote PR creation or merge is authorized.
+- Slice 4: `feature/portal-04-test-identities`, based on `8a99a4a`, targets `feature/portal-03-app-foundation`. ODD-03c forecast: 200–350 authored changes; implementation and commit pending.
 - Approximately 400 authored lines per task is a planning heuristic, not a cap. Never omit tests, compress code, or split inseparable behavior to meet it. Keep PR delivery boundaries and any required exceptions explicit.
 - Branch before work-unit commits on the default branch. Stage only owned paths after reviewing the diff; never sweep existing public-site changes or untracked assets/tests into a commit.
 - Each completed work unit carries behavior, tests, and relevant docs together; use Conventional Commits with no `Co-Authored-By` or AI attribution.
@@ -143,7 +146,7 @@ Next unresolved decisions: schema and operating constraints before persistence/a
 
 ## Bounded next work unit: ODD-03b application foundation
 
-- [ ] ODD-03b: isolated Next.js App Router application with strict TypeScript, its own package and generated lock under `portal/web/`. No login capability is claimed.
+- [x] ODD-03b: isolated Next.js App Router application with strict TypeScript, its own package and generated lock under `portal/web/`; commit `8a99a4a`. No login capability is claimed.
 - Route: delegated writer, because app configuration, behavior, tests, and UI span multiple non-trivial files. Strict TDD comes from current user instructions.
 - Scope: `portal/web/`, a scoped README update, and this document. Root package, static site, existing policy, dirty/untracked files, and preexisting `.vercelignore` remain untouched.
 - UI acceptance: honest Spanish invitation/access-unavailable landing in navy and silver; no fake login form, invented records, private data, or implied authenticated access.
@@ -154,9 +157,9 @@ Next unresolved decisions: schema and operating constraints before persistence/a
 - Delivery forecast: approximately 250–380 authored changes for this slice, excluding the generated lockfile; record the actual count and report heavier scope rather than compressing code or omitting tests.
 - Rollback: remove only this slice's new `portal/web/` files and related README/task entries; retain the existing access policy and public site.
 - Release blocker: root static deployment exclusions remain unverified; do not deploy or modify the preexisting `.vercelignore` in this unit.
-- Status: writer verification passed after bounded installation recovery. Independent verification, visual/browser check, risk assessment, and parent commit remain pending. Keep unchecked until parent closes this unit.
+- Status: closed as a bounded foundation after recovery, independent verification, parent spot check, and commit `8a99a4a`. Visual/browser QA remains pending and non-blocking for this scoped unit; it remains required for later UI acceptance.
 
-### ODD-03b partial evidence
+### ODD-03b historical partial evidence (superseded by recovery below)
 
 - Recovery authorized: resume only the existing application foundation; diagnose registry/package availability, perform one bounded installation, pin dependencies and generate the lock, then run all local checks. No account provisioning, authentication implementation, credentials, or deployment in this slice. Preserve previous RED evidence and partial files.
 
@@ -175,7 +178,44 @@ Next unresolved decisions: schema and operating constraints before persistence/a
 - Final checks, all exit 0: `npm.cmd --prefix portal/web run test` 4/4; `npm.cmd --prefix portal/web run typecheck`; `npm.cmd --prefix portal/web run build` (production static `/` and not-found routes); `node portal/web/tests/smoke.mjs` (HTTP 200, Spanish unavailable/invitation notice, no forms, absent private route 404, scoped process stopped); `node --test portal/tests/access-policy.test.cjs` 9/9; `npm.cmd test` 5/5.
 - Next.js normalized TypeScript configuration before final verification, adding JavaScript allowance and development-generated type inclusion; strict mode remains enabled. All checks disabled framework telemetry through process environment.
 - No new application behavior changed during recovery. Earlier RED/GREEN evidence remains applicable. Root packages, website files, access policy, credentials, and provider accounts were not modified or inspected.
-- Remaining: parent independent verification/commit and browser visual QA; authentication/accounts and cloud connection are separate future work. Static-root release exclusion remains a deployment blocker.
+- Parent-reported independent verification passed: `npm.cmd --prefix portal/web run test` 4/4, `npm.cmd --prefix portal/web run typecheck`, and `node portal/web/tests/smoke.mjs`. Parent spot check passed 4/4 application tests. Commit: `8a99a4a`, 334 authored changes plus 1,400 generated lockfile lines.
+- Native assessment unavailable because untracked inventory declaration was required; RDD status printed off but returned an authority-ownership error. No native review or receipt claimed; independent verification supplied the separate check.
+- Remaining: browser visual QA (non-blocking for scoped foundation); authentication/accounts and cloud connection are separate work. Static-root release exclusion remains a deployment blocker.
+
+## Bounded next work unit: ODD-03c staged test identities
+
+- [ ] ODD-03c: local bootstrap implemented and writer-tested; independent review, actual provisioning/readback, and parent commit pending. No remote identity was created by the writer.
+- Route: delegated writer; bootstrap behavior, tests, and documentation span multiple non-trivial files. Dependencies: completed ODD-03b and the explicit narrow remote authorization above.
+- Implemented files: `portal/scripts/bootstrap-test-users.mjs`, `portal/tests/bootstrap-test-users.test.mjs`, scoped `portal/README.md` updates, and this document. No application source or dependencies changed.
+- Destination: only Free Supabase project `tzgqcwnachuvzikxrozi`, `us-east-1`, organization LEGALTY. No SUSOTECH or other-project mutation; no paid changes, deployment, or email sends.
+- Requested identities: `david@legalty.com` with desired administrator role and `goofypet@gmail.com` with desired client role. Create missing identities only; do not reset existing passwords or silently change existing metadata.
+- Use official supported admin APIs; obtain the project key through the authorized official CLI session, retain it transiently in process, and never print or persist credentials or the supplied password in files, tests, logs, or memory.
+- New identities receive `app_metadata.desired_role` and `active: false` as explicit staging intent only. Metadata is not an authorization source; it does not itself disable provider authentication or enforce administrator permissions.
+- No working portal sign-in or operational access is claimed before trusted profiles, session validation, and required staff MFA are implemented. Missing trusted profiles must fail closed in the eventual application.
+- Strict TDD: observe RED with `node --test portal/tests/bootstrap-test-users.test.mjs` before source implementation, then GREEN and REFACTOR. Use synthetic credentials only in tests; no live provisioning during automated tests.
+- Acceptance tests cover exact-project restriction, duplicate-safe lookup, missing-user creation, preservation of existing identities, inactive staging metadata, sanitized output/errors, and partial failures. Never serialize raw provider errors or credential-bearing requests.
+- Exact remote smoke sequence: sanitized duplicate read, create each missing requested user, then sanitized direct readback of exact email and staging metadata. Report existing-user conflicts or partial outcomes without resets or blind retries.
+- Record each observed result without keys, passwords, access tokens, or raw response bodies. Provisioning proof is actual sanitized remote readback, not a mocked test or successful process exit alone.
+- Local regression checks: `node --test portal/tests/access-policy.test.cjs`, `npm.cmd --prefix portal/web run test`, and `npm.cmd test`; independent verification and parent spot check remain required as applicable.
+- Forecast: 200–350 authored additions plus deletions; slice 4 uses the already selected feature-branch chain. Browser checks N/A for this non-UI bootstrap; existing foundation visual QA remains pending.
+- Rollback: revert only new bootstrap code/tests and scoped documentation changes. Preserve existing accounts; deleting any newly created remote identity requires explicit authorization. Do not remove a partially created account automatically.
+
+### ODD-03c writer evidence
+
+- REST contract verified against official Supabase Auth OpenAPI and `auth-js/GoTrueAdminApi.ts`: paginated list and direct user readback; POST admin creation confirmed in the official client source. No SDK dependency added.
+- RED: `node --test portal/tests/bootstrap-test-users.test.mjs` exited 1 with `ERR_MODULE_NOT_FOUND` before bootstrap source existed (module-load RED, not assertion-level RED).
+- GREEN: initial suite passed 7/7; bounded-pagination and uncertain-readback coverage expanded final suite to 9/9, exit 0. Synthetic mock credentials only; no real network or CLI session in tests.
+- Final regressions all exit 0: `node --test portal/tests/access-policy.test.cjs` 9/9; `npm.cmd --prefix portal/web run test` 4/4; `npm.cmd test` 5/5.
+- Bootstrap pins the HTTPS project host, rejects redirects, bounds each request/CLI call to 15 seconds and listing to 100 pages of 100. Duplicate/repeated pages, existing metadata conflicts, malformed results, and missing credentials fail closed before mutation. Creation attempts are never retried; uncertain POST or direct readback stops with safe partial states.
+- Password accepted only through the operator process environment in CLI use, omitted from the child CLI environment; key retrieval stdout stays transient. Results contain only fixed requested identities, desired roles, and safe state/reason strings. No raw exceptions, provider bodies, passwords, or keys are printed/persisted.
+- Remote execution and provisioning proof remain pending parent review. No live inspect/create invocation was run. Staging flags do not enforce provider account disablement or operational privileges; real sign-in, profile authorization, MFA, and password-change enforcement remain unimplemented.
+
+### ODD-03c parent verification and provisioning
+
+- Independent verifier passed 9/9 bootstrap tests plus synthetic cross-page duplicate, malformed identity, and malformed credential-loader checks. Parent repeated the 9/9 test suite successfully.
+- Authorized read-only preflight returned both requested identities missing. A single create invocation returned both created, with direct provider readback for each. A separate subsequent inspect returned both existing with the expected staging flags; all three commands exited 0.
+- Only LEGALTY project `tzgqcwnachuvzikxrozi` was touched. No email, password reset, paid change, deployment, or SUSOTECH mutation occurred. Temporary password and project key were not written to repository files.
+- Native assessment remains unavailable due to untracked inventory; no native review or receipt claimed. Independent verification supplied the separate check. Commit pending; operational login and actual role enforcement remain future work.
 
 ## Bounded next work unit: ODD-03a access policy
 
