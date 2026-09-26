@@ -262,9 +262,9 @@ Next unresolved decisions: schema and operating constraints before persistence/a
 
 ## Bounded next work unit: ODD-03e trusted profiles and local SQL proof
 
-- [ ] ODD-03e.0: establish an isolated local Supabase database harness under `portal/supabase/`; branch `feature/portal-07-trusted-profiles` from `5f3903e`, targeting slice 6. Current continuation authorizes the local profile migration after SQL RED.
-- [ ] ODD-03e.1: write failing role-scoped SQL tests before trusted-profile schema/RLS implementation; authorized next in this local continuation.
-- [ ] ODD-03e.2: run scoped SQL isolation and regression verification; preserve exact SQL outcomes, not mocked authorization claims.
+- [x] ODD-03e.0: establish an isolated local Supabase database harness under `portal/supabase/`; branch `feature/portal-07-trusted-profiles` from `5f3903e`, targeting slice 6. Current continuation authorizes the local profile migration after SQL RED.
+- [x] ODD-03e.1: write failing role-scoped SQL tests before trusted-profile schema/RLS implementation; authorized next in this local continuation.
+- [x] ODD-03e.2: run scoped SQL isolation and regression verification; preserve exact SQL outcomes, not mocked authorization claims.
 - Authorization: user approved starting installed Docker Desktop/local Supabase and image downloads with local RAM/disk use. No remote CLI credentials/session, project linking, cloud operations, Windows/WSL feature changes, installation, reboot, or license acceptance. Preserve unrelated containers and application/environment files.
 - Harness scope: minimal supported database-only CLI path, isolated project ID, unused loopback-bound ports, no linked project. Inspect Docker context locally before engine calls; remote endpoints are prohibited. Verify published bindings and actual local `SELECT`/current database before claiming readiness.
 - Strict TDD remains enabled; e.0 config/resource bootstrap has no profile behavior. e.1 must demonstrate SQL RED before migrations. Planned runner: installed Supabase CLI `test db` against the isolated local instance; establish command capability first.
@@ -279,7 +279,7 @@ Next unresolved decisions: schema and operating constraints before persistence/a
 ### ODD-03e local SQL verification
 
 - Distinct `legalty-profiles-sql-test` container uses downloaded Postgres17.6.1.167: network none, PortBindings{}, actual auth.users/auth.uid/anon/authenticated roles and pgTAP. SELECT returned postgres/postgres. Old unsafe container remains stopped. No production data or cloud operation.
-- SQL RED: test-local.ps1 exit1, missing public.profiles before migration. GREEN: -ApplyMigration exit0, 61 TAP assertions; expanded constraints and reran 63/63 exit0. Fixtures roll back. Node portal suites18/18, app21/21, typecheck all exit0. Build/live HTTP not rerun for SQL-only scope. Commit pending parent-authorized scoped commit.
+- SQL RED: test-local.ps1 exit1, missing public.profiles before migration. GREEN: -ApplyMigration exit0, 61 TAP assertions; expanded constraints and reran 63/63 exit0. Fixtures roll back. Node portal suites18/18, app21/21, typecheck all exit0. Build/live HTTP not rerun for SQL-only scope. Commit `9410b9e`: 228 authored changes, 7 scoped files; native assessment remains parent-owned.
 - Release blocker: parent dry upload included ignored DPAPI file, no upload occurred (memory1395). Next deployment slice must add portal/web/.vercelignore exclusions for .env*, nested .env*, and *.dpapi and assert actual dry-upload inventory excludes them. SQL scope unchanged.
 ### ODD-03e.0 initial harness evidence
 
