@@ -4,9 +4,9 @@ Build connected client and staff experiences while preserving the current public
 
 ## Status and next action
 
-- ODD-01: prepared; parent structural readback passed; work-unit commit pending.
-- ODD-02 through ODD-11: pending; no portal source implementation completed.
-- Next: commit the foundation document on feature/portal-01-foundation, then implement the pure authorization policy on its child branch without touching the public website.
+- ODD-01: draft prepared; parent structural readback passed; foundation commit `f59cbbd` (141 additions); architecture remains incomplete.
+- ODD-03a: isolated read policy implemented and independently verified; work-unit commit pending. ODD-03 and the remaining main tasks remain incomplete.
+- Next: create the scoped access-policy commit, then resolve application/provider architecture before authentication integration.
 - Engram mirror: maintained by parent persistence under `odd/legalty-client-portal/tasks`, including this full document and repository-relative locator.
 
 ## Objective, problem, and scope
@@ -97,9 +97,9 @@ Every task remains unchecked until its outcome, applicable checks, and work-unit
 
 ### Completion ledger
 
-- [ ] ODD-01 — draft prepared; structural readback passed; commit: none.
+- [ ] ODD-01 — draft prepared; structural readback passed; foundation commit: `f59cbbd`; final architecture decisions pending.
 - [ ] ODD-02 — pending; commit: none.
-- [ ] ODD-03 — pending; commit: none.
+- [ ] ODD-03 — ODD-03a pure policy writer-verified; authentication and policy commit pending; independent verification passed.
 - [ ] ODD-04 — pending; commit: none.
 - [ ] ODD-05 — pending; commit: none.
 - [ ] ODD-06 — pending; commit: none.
@@ -113,9 +113,9 @@ Every task remains unchecked until its outcome, applicable checks, and work-unit
 
 - Strict TDD: enabled by current user instructions, overriding obsolete OpenSpec configuration. For behavior changes, record observed RED, then GREEN, then REFACTOR; never infer a failing test or substitute mockups for proof.
 - Known runner: `npm.cmd test`; parent-supplied baseline: 5 tests passed. `npm test` failed under PowerShell execution policy; use the explicit `.cmd` runner. Baseline tests do not prove a future portal implementation.
-- This passive documentation unit: functional tests and runtime harness N/A because it creates no executable behavior. Required check: parent structural readback. Browser checks remain pending for later UI work.
+- Foundation documentation: parent structural readback passed. ODD-03a functional checks are recorded below; runtime harness N/A because no runtime boundary or consumer exists. Browser checks remain pending for later UI work.
 - RDD: command printed off but exited with an unsafe `.git` authority-ownership error; effective status is uncertain/unavailable. Do not repair ownership or enable review automatically; preserve the error and follow applicable verification rules.
-- Forecast: several thousand authored additions plus deletions across the full feature. This is a planning estimate, not a measured diff. Running committed authored count: 0.
+- Forecast: several thousand authored additions plus deletions across the full feature. This is a planning estimate, not a measured diff. Running committed authored count: 141 (foundation commit `f59cbbd`); access-policy unit uncommitted.
 - Delivery strategy: `ask-on-risk`. Chain strategy: `feature-branch-chain`, explicitly accepted by the user. Tracker: `feature/legalty-client-portal`; slice 1: `feature/portal-01-foundation` targets tracker; slice 2: `feature/portal-02-access-policy` targets slice 1. No remote PR creation or merge is authorized.
 - Approximately 400 authored lines per task is a planning heuristic, not a cap. Never omit tests, compress code, or split inseparable behavior to meet it. Keep PR delivery boundaries and any required exceptions explicit.
 - Branch before work-unit commits on the default branch. Stage only owned paths after reviewing the diff; never sweep existing public-site changes or untracked assets/tests into a commit.
@@ -126,16 +126,29 @@ Every task remains unchecked until its outcome, applicable checks, and work-unit
 
 Before resuming, retrieve project/feature memory and its full observation, read this file, and reconcile both with current requirements and repository evidence. Preserve conflicting edits and valid completed work; mirror the entire updated document after each task.
 
-Current rollback boundary: only the newly created `odd/tasks/legalty-client-portal.md`; remove it only if reverting this documentation unit is authorized. No source, configuration, dependency, branch, or remote state was changed by this unit. Later units must name their own independently reversible scope.
+Foundation rollback: revert only its task-document changes if authorized. Access-policy rollback: revert only the three new portal files named below and their progress entries; no runtime consumer, public-site change, configuration, dependency, or remote operation belongs to this unit.
 
 Next unresolved decisions: implementation stack/providers before dependent source changes; payment prices/currency before checkout; authorized deployment destination/session before remote release.
 
 ## Bounded next work unit: ODD-03a access policy
 
-- [ ] Implement and test a pure, deny-by-default case read policy for verified principals, current case links/assignments, and record visibility; no authentication endpoint or database access yet.
+- [ ] ODD-03a: pure deny-by-default case and record read policy independently verified; commit pending. No authentication endpoint or database access yet.
 - Route: delegated writer (multiple non-trivial files); independent verification required if native assessment is unavailable.
 - Scope: new portal/domain/access-policy.cjs, portal/tests/access-policy.test.cjs, portal/README.md, plus this progress document. No existing website files, package files, or payment APIs changed.
 - Checks: observed RED then GREEN with node --test portal/tests/access-policy.test.cjs; existing regression suite npm.cmd test; parent spot check and independent read-only verification.
 - Trust boundary: future server adapter must resolve identity/roles/links from trusted persistence on every request; the pure function does not authenticate browser data or secure any endpoint by itself.
 - Rollback: remove only the new portal policy/tests/readme and corresponding progress entries; no runtime consumer exists yet.
 - Vendor selection does not block this isolated policy contract; ODD-01 and ODD-03 as a whole remain incomplete.
+
+### ODD-03a evidence and handoff
+
+- Branch: `feature/portal-02-access-policy`, based on foundation `f59cbbd`; tracker `feature/legalty-client-portal` at `b198daa`. Parent supplied branch/commit facts; writer performed no Git mutation.
+- Implemented `canReadCase` and `canReadRecord`: active recognized principals, assigned staff, linked clients, matching cases, explicit record audiences, internal-only isolation, and fail-closed malformed inputs. No input coercion or mutation.
+- An audience containing a removed or unrelated client invalidates the whole record, including admin/staff reads. Future maintenance must repair stale metadata with separate write authorization.
+- RED: `node --test portal/tests/access-policy.test.cjs` exited 1 before source existed: `MODULE_NOT_FOUND`, 0 passed / 1 failed. This is module-load RED, not assertion-level RED.
+- GREEN: same command passed 9/9 after implementation, with 0 failures.
+- REFACTOR: clarified malformed-visibility test construction and added inherited-principal denial coverage; same command passed 9/9 again, with 0 failures.
+- Regression: `npm.cmd test` passed 5/5 with 0 failures both after implementation and after test cleanup. Root test discovery does not include portal tests; run both commands.
+- Runtime harness: N/A, isolated pure function with no routes or runtime consumer. UI/browser checks: pending and outside this unit. Identity/session security is not established by these tests.
+- Independent verification passed: 9/9 portal tests, 5/5 existing tests, 2,048 independent matrix combinations plus 31 malformed/null-prototype checks. Parent spot check passed 9/9; hashes of 15 existing files were unchanged. Native assessment unavailable (untracked inventory declaration required); no native review/receipt claimed. Commit ID and final authored count pending.
+- No deployment authorized; static-root exclusion and private runtime must be verified before release, and no real client data may be added here.
