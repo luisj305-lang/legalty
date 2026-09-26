@@ -14,7 +14,7 @@ const child = spawn(process.execPath, ['node_modules/next/dist/bin/next',
   'start', '--hostname', '127.0.0.1', '--port', String(port)], {
   cwd: new URL('../', import.meta.url),
   env: { ...process.env, NEXT_TELEMETRY_DISABLED: '1', PORTAL_ORIGIN: origin,
-    NEXT_PUBLIC_SUPABASE_URL: '', NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: '' },
+    NEXT_PUBLIC_SUPABASE_URL: '', NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: '', SUPABASE_SECRET_KEY: '' },
   windowsHide: true,
   stdio: ['ignore', 'pipe', 'pipe'],
 });
@@ -59,7 +59,11 @@ try {
   const error = await (await fetch(`${address}/login?error=credentials`)).text();
   assert.match(error, /No fue posible iniciar sesión/);
   assert.doesNotMatch(error, /synthetic@example/);
-  for (const route of ['login', 'account']) {
+  const setup = await fetch(`${address}/setup/password`, { redirect: 'manual' });
+  assert.equal(setup.status, 307);
+  assert.equal(setup.headers.get('location'), '/login');
+  assert.match(setup.headers.get('cache-control'), /no-store/);
+  for (const route of ['login', 'account', 'setup/password']) {
     const denied = await fetch(`${address}/${route}`, { method: 'POST', body,
       headers: { origin: 'https://foreign.example' }, redirect: 'manual' });
     assert.equal(denied.status, 403);

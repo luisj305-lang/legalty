@@ -13,6 +13,7 @@ export default async function Account({ searchParams }: { searchParams: Promise<
     <p>Tu sesión está verificada. Los casos, documentos y funciones operativas todavía no están habilitados.</p>
     <p>El equipo debe completar la configuración de acceso y seguridad antes de habilitar el portal.</p>
     {(await searchParams).error && <p role="alert">No fue posible cerrar sesión. Intenta nuevamente.</p>}
+    <p><a href="/setup/password">Configurar mi contraseña</a></p>
     <form action={logout}><button type="submit">Cerrar sesión</button></form>
   </section></main>;
 }

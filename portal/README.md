@@ -98,3 +98,10 @@ powershell.exe -NoProfile -File portal/supabase/test-local.ps1
 ```
 
 The runner refuses networked/port-published containers and executes pgTAP through psql with ON_ERROR_STOP. It rejects SQL errors, failed TAP assertions, or a missing final plan. Synthetic identities and profile fixtures roll back. This proves SQL-role/RLS behavior, not hosted Auth, API exposure, MFA, or password-rotation enforcement. The worker does not run remote migrations. Rollback requires a separately reviewed migration; never drop a populated profile table automatically.
+## Password setup boundary
+
+`/setup/password` verifies the session and exact origin, validates matching passwords (12 characters minimum, 72 UTF-8 bytes maximum), and calls session-scoped `auth.updateUser`. Only a confirmed response for the verified identity permits the isolated server completion capability to clear that same profile's rotation flag. It never changes role or active status. The page freshly reads completion and never grants operational access.
+
+This unit introduces a server-only `SUPABASE_SECRET_KEY` capability, unlike the public-key-only sign-in unit. It is not provided by this change. Missing configuration fails before password mutation. Only a modern secret key and the fixed LEGALTY Supabase URL are accepted; no persisted session, auto-refresh, browser import, public env name, generic admin RPC, or credential logging. The privileged key bypasses RLS: deployment must inject it solely into the server runtime and tightly restrict access. Never put it in an environment file uploaded to Vercel or in frontend build configuration.
+
+Provider update and profile completion are not atomic. If completion fails, the password may already have changed; generic guidance asks the user to sign in again and use a different new password or contact staff. There is no automatic retry, account activation, role change, reset email, or SQL trigger. MFA/reauthentication restrictions can deny the provider update. Real password changes and hosted completion remain untested; all new tests use synthetic boundaries.
