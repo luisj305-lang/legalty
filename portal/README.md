@@ -1,6 +1,26 @@
-# Portal access policy foundation
+# Portal foundations
 
-This folder contains a pure read-authorization policy, not a functioning portal or login system. No route, UI, storage adapter, or runtime consumer uses it yet.
+This folder contains a pure read-authorization policy and an isolated Next.js application foundation. The application currently shows an invitation-only, access-unavailable landing, not a working login or dashboard. No runtime consumer uses the policy yet.
+
+## Application quick start
+
+Use Node.js 24 or newer. Dependencies and generated output stay under `portal/web`; the root website package is unchanged.
+
+Exact direct dependency versions and the generated npm lockfile are included with the application source. Use `ci` rather than reconstructing dependencies from an interrupted installation. Local tests, typecheck, production build, and the HTTP smoke harness passed; visual/browser verification remains pending.
+
+```sh
+npm.cmd --prefix portal/web ci
+npm.cmd --prefix portal/web run test
+npm.cmd --prefix portal/web run typecheck
+npm.cmd --prefix portal/web run build
+npm.cmd --prefix portal/web run start
+```
+
+Set `NEXT_TELEMETRY_DISABLED=1` in the command environment for local checks. `dev` and `start` bind to loopback. After building, `node portal/web/tests/smoke.mjs` starts its own loopback server, checks the landing and an absent private route, and stops that process.
+
+No environment configuration is needed for this landing. The pure `parsePublicConfiguration` helper accepts only an HTTPS origin and a modern `sb_publishable_` key; it returns null on missing or malformed settings. Legacy JWT keys are intentionally unsupported. This is syntax validation, not verification of a project/key, identity, or authorization. It is not wired to the page, reads no environment by itself, and never connects to Supabase. Even valid settings do not enable login. Keep local `.env*` files untracked and never put service-role keys in public settings.
+
+Next: implement trusted session adapters, invitations, staff MFA, schema/RLS policies, and private storage after resolving their operating constraints. The static-root exclusion blocker still prevents release. This app has no payment or document access capabilities.
 
 ## Run the checks
 
@@ -41,4 +61,4 @@ Apply authorization before exposing list results, details, exports, or document 
 
 No deployment is authorized. The repository currently serves a static root; do not place private documents, credentials, or real client data here. Establish and verify a separate private runtime and deployment exclusions before release. Ignore rules alone are not access control.
 
-Rollback this unconsumed unit by reverting only `portal/domain/access-policy.cjs`, `portal/tests/access-policy.test.cjs`, this README, and its progress entries in `odd/tasks/legalty-client-portal.md`. No public-site change or dependency is needed. The next step is independent verification and the local work-unit commit; full authentication and provider decisions remain pending.
+Rollback the application foundation independently by reverting `portal/web/` and its README/task entries. Preserve the policy. Rollback the earlier policy unit independently through its policy/test files and related documentation. Neither unit changes the public website. Full authentication and provider integration remain pending.
