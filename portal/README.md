@@ -80,6 +80,21 @@ New users have confirmed email without an invitation send, with `desired_role`, 
 
 API contracts: [official Admin implementation](https://github.com/supabase/auth-js/blob/master/src/GoTrueAdminApi.ts) and [Auth REST specification](https://github.com/supabase/auth/blob/master/openapi.yaml). This script uses POST `/admin/users`, paginated GET `/admin/users`, and direct GET readback; it never calls invite, recovery, update, or delete endpoints. Remote provisioning is not proven by mocked tests and is pending parent execution.
 
-No deployment is authorized. The repository currently serves a static root; do not place private documents, credentials, or real client data here. Establish and verify a separate private runtime and deployment exclusions before release. Ignore rules alone are not access control.
+Deployment to the separate legalty-portal project is now authorized; the parent owns remote operations. Release is blocked until a dry-run proves that `.env*` and `*.dpapi` files are excluded. The repository currently serves a static root; do not place private documents, credentials, or real client data here. Establish and verify a separate private runtime and deployment exclusions before release. Ignore rules alone are not access control.
 
 Rollback the application foundation independently by reverting `portal/web/` and its README/task entries. Preserve the policy. Rollback the earlier policy unit independently through its policy/test files and related documentation. Neither unit changes the public website. Full authentication and provider integration remain pending.
+
+## Trusted profiles SQL
+
+`supabase/migrations/202609260001_trusted_profiles.sql` creates only trusted profiles: explicit client/staff/admin role, inactive/rotation-required defaults, Auth-user FK, and authenticated own-row SELECT. Clients and anonymous users cannot write any table or column. Reading setup flags before MFA does not grant operational access. There is no metadata trigger, automatic provisioning, activation, or business schema.
+
+Local proof uses the downloaded Supabase Postgres 17.6.1.167 image, including its real Auth schema/roles, in `legalty-profiles-sql-test` with `--network none` and **no published ports**. Use Docker exec, not a connection URL. The prior CLI-created container remains stopped: CLI startup overrode the bridge default and exposed all interfaces. Do not restart it.
+
+```powershell
+# First application to the dedicated fresh local fixture only:
+powershell.exe -NoProfile -File portal/supabase/test-local.ps1 -ApplyMigration
+# Repeat tests without replaying the one-time migration:
+powershell.exe -NoProfile -File portal/supabase/test-local.ps1
+```
+
+The runner refuses networked/port-published containers and executes pgTAP through psql with ON_ERROR_STOP. It rejects SQL errors, failed TAP assertions, or a missing final plan. Synthetic identities and profile fixtures roll back. This proves SQL-role/RLS behavior, not hosted Auth, API exposure, MFA, or password-rotation enforcement. The worker does not run remote migrations. Rollback requires a separately reviewed migration; never drop a populated profile table automatically.
