@@ -1,5 +1,5 @@
 param([switch]$ApplyMigration, [switch]$ApplyCases, [switch]$ApplyWrites,
-    [switch]$ApplyMfaPolicy, [switch]$ApplyUpdateLockOrder,
+    [switch]$ApplyMfaPolicy, [switch]$ApplyUpdateLockOrder, [switch]$ApplyParticipantManagement,
     [string]$Container = 'legalty-profiles-sql-test')
 $ErrorActionPreference = 'Stop'
 $container = $Container
@@ -29,6 +29,9 @@ if ($ApplyMfaPolicy) {
 }
 if ($ApplyUpdateLockOrder) {
     Invoke-LocalSql (Join-Path $PSScriptRoot 'migrations/202609260005_update_case_lock_order.sql')
+}
+if ($ApplyParticipantManagement) {
+    Invoke-LocalSql (Join-Path $PSScriptRoot 'migrations/202609260006_case_participants.sql')
 }
 foreach ($test in Get-ChildItem (Join-Path $PSScriptRoot 'tests') -Filter '*.test.sql' | Sort-Object Name) {
     $output = @(Invoke-LocalSql $test.FullName)
