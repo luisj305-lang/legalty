@@ -22,7 +22,9 @@ export default async function Cases() {
       {metrics.map(([label, count]) =>
         <div className={styles.metric} key={label}><span>{label}</span><strong>{count}</strong></div>)}
     </div>
-    <section className={styles.panel}><div className={styles.sectionHeading}><h2>Casos autorizados</h2><span>Actualización más reciente primero</span></div>
+    <section className={styles.panel}><div className={styles.sectionHeading}><h2>Casos autorizados</h2><div>
+      {view.role === 'admin' && <a className={styles.primaryLink} href="/cases/new">Crear caso</a>}
+      <span>Actualización más reciente primero</span></div></div>
       {view.rows.length === 0 ? <div className={styles.empty}><h3>Todavía no tienes casos visibles</h3><p>Cuando el equipo vincule un caso a tu cuenta, podrás seguirlo aquí.</p></div> :
         <ul className={styles.caseList}>{view.rows.map(row => <li key={row.id}>
           <div className={styles.caseSummary}><span className={styles.reference}>{row.reference}</span><h3><a href={`/cases/${row.id}`}>{row.title}</a></h3>

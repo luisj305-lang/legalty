@@ -4,6 +4,16 @@ import { serverClient } from '../supabase/next-client';
 import { accountAccess } from '../supabase/server';
 import { readCaseView } from './read';
 
+export async function caseAdminAccess() {
+  const client = await serverClient().catch(() => null);
+  if (!client) redirect('/login');
+  const access = await accountAccess(client);
+  if (access.state === 'signed_out') redirect('/login');
+  if (access.state === 'setup_pending') redirect('/account');
+  if (access.role !== 'admin') redirect('/cases');
+  return access;
+}
+
 export async function caseView(id?: string) {
   const client = await serverClient().catch(() => null);
   if (!client) redirect('/login');

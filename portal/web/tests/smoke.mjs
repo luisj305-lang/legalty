@@ -65,18 +65,18 @@ try {
     assert.equal(setup.headers.get('location'), '/login');
     assert.match(setup.headers.get('cache-control'), /no-store/);
   }
-  for (const route of ['cases', 'cases/11111111-1111-4111-8111-111111111111']) {
+  for (const route of ['cases', 'cases/new', 'cases/11111111-1111-4111-8111-111111111111']) {
     const denied = await fetch(`${address}/${route}`, { redirect: 'manual' });
     assert.equal(denied.status, 307);
     assert.equal(denied.headers.get('location'), '/login');
     assert.match(denied.headers.get('cache-control'), /no-store/);
   }
-  for (const route of ['login', 'account', 'setup/password', 'setup/mfa', 'cases']) {
+  for (const route of ['login', 'account', 'setup/password', 'setup/mfa', 'cases', 'cases/new']) {
     const denied = await fetch(`${address}/${route}`, { method: 'POST', body,
       headers: { origin: 'https://foreign.example' }, redirect: 'manual' });
     assert.equal(denied.status, 403);
   }
-  console.log('PASS: logged-out redirect, native login form, generic failure, foreign-origin rejection, no operational routes');
+  console.log('PASS: logged-out redirects including case creation, no-store, generic failure, foreign-origin rejection, scoped server');
 } finally {
   if (child.exitCode === null) {
     const exited = once(child, 'exit');

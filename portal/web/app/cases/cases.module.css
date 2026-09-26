@@ -65,6 +65,8 @@
 .sectionHeading { display: flex; align-items: baseline; justify-content: space-between; gap: 20px; padding-bottom: 15px; }
 .sectionHeading h2 { margin: 0; color: var(--ink); font-size: 20px; }
 .sectionHeading span { color: var(--muted); font-size: 12px; }
+.sectionHeading > div { display: flex; align-items: center; gap: 18px; }
+.primaryLink { padding: 9px 14px; color: #fff !important; background: var(--navy); text-decoration: none; font-size: 12px; }
 .caseList { margin: 0; padding: 0; list-style: none; }
 .caseList li { display: flex; justify-content: space-between; gap: 30px; padding: 24px 0; border-top: 1px solid var(--line); }
 .caseSummary { min-width: 0; }
@@ -80,6 +82,16 @@
 .statePanel { margin-top: 24px; }
 .statePanel a, .truncation { color: #315d7d; }
 .truncation { margin: 20px 0 0; padding-top: 18px; border-top: 1px solid var(--line); font-size: 12px; }
+.createPanel { max-width: 760px; margin-top: 24px; }
+.caseForm { display: grid; gap: 22px; }
+.caseForm > div { display: grid; gap: 8px; }
+.caseForm label { font-weight: 700; }
+.caseForm input, .caseForm textarea { width: 100%; box-sizing: border-box; padding: 12px 14px; border: 1px solid #9eafbd; border-radius: 0; color: var(--ink); background: #fff; font: inherit; }
+.caseForm textarea { resize: vertical; }
+.caseForm small { color: var(--muted); line-height: 1.5; }
+.caseForm .formActions { display: flex; grid-template-columns: auto auto; align-items: center; justify-content: start; gap: 20px; }
+.formActions button { margin: 0; color: #fff; background: var(--navy); }
+.formError { margin: 0 0 22px; padding: 14px; border-left: 4px solid #a33b3b; color: #752828; background: #fff2f2; }
 .footer { padding: 18px 42px; border-top: 1px solid var(--line); color: #718398; font-size: 10px; letter-spacing: 1.5px; }
 
 .main :global(.eyebrow) { margin: 20px 0 8px; color: #396385; }
@@ -120,6 +132,7 @@
   .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .metric, .panel { padding: 18px; }
   .sectionHeading, .caseList li { align-items: flex-start; flex-direction: column; gap: 10px; }
+  .sectionHeading > div { align-items: flex-start; flex-direction: column; gap: 10px; }
   .caseMeta { justify-items: start; }
   .footer { padding: 16px 18px; }
 }
