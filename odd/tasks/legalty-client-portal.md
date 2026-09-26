@@ -7,7 +7,7 @@ Build connected client and staff experiences while preserving the current public
 - ODD-01: draft prepared; parent structural readback passed; foundation commit `f59cbbd` (141 additions); architecture remains incomplete.
 - ODD-03a: isolated read policy implemented, independently verified, and committed as 0cdf01c. ODD-03 and the remaining main tasks remain incomplete.
 - ODD-03b: application foundation independently verified and committed as `8a99a4a`; visual browser QA remains pending, non-blocking for this scoped foundation.
-- Next: ODD-03c staged test identities in the authorized separate Supabase project; internal screen design, schema, trusted profiles, sessions, MFA, and working sign-in remain pending.
+- ODD-03c: requested Auth identities staged and independently verified; commit `85165fd`. Next: trusted profiles, sessions, MFA, password rotation, and working sign-in; no operational dashboard access yet.
 - Engram mirror: maintained by parent persistence under `odd/legalty-client-portal/tasks`, including this full document and repository-relative locator.
 
 ## Objective, problem, and scope
@@ -130,7 +130,7 @@ Every task remains unchecked until its outcome, applicable checks, and work-unit
 - RDD: command printed off but exited with an unsafe `.git` authority-ownership error; effective status is uncertain/unavailable. Do not repair ownership or enable review automatically; preserve the error and follow applicable verification rules.
 - Forecast: several thousand authored additions plus deletions across the full feature. Known work-unit authored subtotal: 697, excluding intervening progress-bookkeeping commits: foundation `f59cbbd` (141), access policy `0cdf01c` (222), application foundation `8a99a4a` (334). The last commit additionally contains 1,400 generated lockfile lines, excluded from authored count. Reconcile bookkeeping before reporting the complete branch total.
 - Delivery strategy: `ask-on-risk`. Chain strategy: `feature-branch-chain`, explicitly accepted by the user. Tracker: `feature/legalty-client-portal`; slice 1: `feature/portal-01-foundation` targets tracker; slice 2: `feature/portal-02-access-policy` targets slice 1; slice 3: `feature/portal-03-app-foundation` targets slice 2, starting at `24a41db`. No remote PR creation or merge is authorized.
-- Slice 4: `feature/portal-04-test-identities`, based on `8a99a4a`, targets `feature/portal-03-app-foundation`. ODD-03c forecast: 200–350 authored changes; implementation and commit pending.
+- Slice 4: `feature/portal-04-test-identities`, based on `8a99a4a`, targets `feature/portal-03-app-foundation`. ODD-03c commit `85165fd`: 319 authored changes, plus subsequent progress bookkeeping.
 - Approximately 400 authored lines per task is a planning heuristic, not a cap. Never omit tests, compress code, or split inseparable behavior to meet it. Keep PR delivery boundaries and any required exceptions explicit.
 - Branch before work-unit commits on the default branch. Stage only owned paths after reviewing the diff; never sweep existing public-site changes or untracked assets/tests into a commit.
 - Each completed work unit carries behavior, tests, and relevant docs together; use Conventional Commits with no `Co-Authored-By` or AI attribution.
@@ -184,7 +184,7 @@ Next unresolved decisions: schema and operating constraints before persistence/a
 
 ## Bounded next work unit: ODD-03c staged test identities
 
-- [ ] ODD-03c: local bootstrap implemented and writer-tested; independent review, actual provisioning/readback, and parent commit pending. No remote identity was created by the writer.
+- [x] ODD-03c: bootstrap independently verified and parent-provisioned identities read back successfully; commit `85165fd`. Staged identities do not yet grant operational portal access.
 - Route: delegated writer; bootstrap behavior, tests, and documentation span multiple non-trivial files. Dependencies: completed ODD-03b and the explicit narrow remote authorization above.
 - Implemented files: `portal/scripts/bootstrap-test-users.mjs`, `portal/tests/bootstrap-test-users.test.mjs`, scoped `portal/README.md` updates, and this document. No application source or dependencies changed.
 - Destination: only Free Supabase project `tzgqcwnachuvzikxrozi`, `us-east-1`, organization LEGALTY. No SUSOTECH or other-project mutation; no paid changes, deployment, or email sends.
@@ -215,7 +215,7 @@ Next unresolved decisions: schema and operating constraints before persistence/a
 - Independent verifier passed 9/9 bootstrap tests plus synthetic cross-page duplicate, malformed identity, and malformed credential-loader checks. Parent repeated the 9/9 test suite successfully.
 - Authorized read-only preflight returned both requested identities missing. A single create invocation returned both created, with direct provider readback for each. A separate subsequent inspect returned both existing with the expected staging flags; all three commands exited 0.
 - Only LEGALTY project `tzgqcwnachuvzikxrozi` was touched. No email, password reset, paid change, deployment, or SUSOTECH mutation occurred. Temporary password and project key were not written to repository files.
-- Native assessment remains unavailable due to untracked inventory; no native review or receipt claimed. Independent verification supplied the separate check. Commit pending; operational login and actual role enforcement remain future work.
+- Native assessment remains unavailable due to untracked inventory; no native review or receipt claimed. Independent verification supplied the separate check. Commit `85165fd` contains 319 authored changes; operational login and actual role enforcement remain future work.
 
 ## Bounded next work unit: ODD-03a access policy
 
