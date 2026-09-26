@@ -119,3 +119,11 @@ The second migration adds cases and separate client/staff links. Case descriptio
 Apply once to the local isolated fixture with `test-local.ps1 -ApplyCases`; repeat all SQL tests with `test-local.ps1`. The local image has auth.uid but no auth.jwt helper, so assurance reads the same trusted request.jwt.claims PostgreSQL setting directly. This assumes the API establishes verified JWT context; do not expose arbitrary SQL/session-setting RPCs.
 
 No case writes are granted yet. Validated create/update RPCs, participant-role validation, immutable audit and transaction tests are the next coherent slice; timestamps are not automatically maintained until those writes exist. No real case data or hosted migration was used. Revert only this local schema/test unit; never drop populated remote tables without a reviewed data-preservation plan.
+
+## Case writes and audit
+
+Migration 003 grants authenticated execution of `create_case` (active admin+AAL2 only), `update_case` (active assigned staff/admin+AAL2), and `find_case_participant` (admin exact-email and trusted client/staff role, at most one row). Actor IDs come only from Auth context. Create validates unique nonempty client links, bounded arrays and actual participant roles; inactive participants may be linked but cannot read until separately activated. Updates lock the case; profile row locks stabilize authorization during writes. No direct table writes or reassignment endpoint.
+
+Each successful write appends an atomic internal audit entry with actor, operation, timestamp and field names, not sensitive content snapshots. Audit SELECT is scoped to assigned staff/admin, and direct insertion/update/delete are denied; a trigger also rejects update/delete. The private schema is not exposed through PostgREST, so future audit UI needs a separately scoped read RPC. Database owners remain able to administer the database; this is application-level immutability, not tamper-proof external storage.
+
+Apply once locally with `test-local.ps1 -ApplyWrites`, then use `test-local.ps1` for all suites. Tests force an audit insert failure and prove the case update rolls back. Remote application, UI integration, reassignment, concurrency stress and external audit retention remain separate work.

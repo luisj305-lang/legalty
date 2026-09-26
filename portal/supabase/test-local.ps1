@@ -1,4 +1,4 @@
-param([switch]$ApplyMigration, [switch]$ApplyCases)
+param([switch]$ApplyMigration, [switch]$ApplyCases, [switch]$ApplyWrites)
 $ErrorActionPreference = 'Stop'
 $container = 'legalty-profiles-sql-test'
 $context = 'desktop-linux'
@@ -18,6 +18,9 @@ if ($ApplyMigration) {
 }
 if ($ApplyCases) {
     Invoke-LocalSql (Join-Path $PSScriptRoot 'migrations/202609260002_case_reads.sql')
+}
+if ($ApplyWrites) {
+    Invoke-LocalSql (Join-Path $PSScriptRoot 'migrations/202609260003_case_writes.sql')
 }
 foreach ($test in Get-ChildItem (Join-Path $PSScriptRoot 'tests') -Filter '*.test.sql' | Sort-Object Name) {
     $output = @(Invoke-LocalSql $test.FullName)

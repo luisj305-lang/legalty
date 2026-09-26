@@ -269,17 +269,7 @@ Next unresolved decisions: schema and operating constraints before persistence/a
 
 ### ODD-03a evidence and handoff
 
-- Branch: `feature/portal-02-access-policy`, based on foundation `f59cbbd`; tracker `feature/legalty-client-portal` at `b198daa`. Parent supplied branch/commit facts; writer performed no Git mutation.
-- Implemented `canReadCase` and `canReadRecord`: active recognized principals, assigned staff, linked clients, matching cases, explicit record audiences, internal-only isolation, and fail-closed malformed inputs. No input coercion or mutation.
-- An audience containing a removed or unrelated client invalidates the whole record, including admin/staff reads. Future maintenance must repair stale metadata with separate write authorization.
-- RED: `node --test portal/tests/access-policy.test.cjs` exited 1 before source existed: `MODULE_NOT_FOUND`, 0 passed / 1 failed. This is module-load RED, not assertion-level RED.
-- GREEN: same command passed 9/9 after implementation, with 0 failures.
-- REFACTOR: clarified malformed-visibility test construction and added inherited-principal denial coverage; same command passed 9/9 again, with 0 failures.
-- Regression: `npm.cmd test` passed 5/5 with 0 failures both after implementation and after test cleanup. Root test discovery does not include portal tests; run both commands.
-- Runtime harness: N/A, isolated pure function with no routes or runtime consumer. UI/browser checks: pending and outside this unit. Identity/session security is not established by these tests.
-- Independent verification passed: 9/9 portal tests, 5/5 existing tests, 2,048 independent matrix combinations plus 31 malformed/null-prototype checks. Parent spot check passed 9/9; hashes of 15 existing files were unchanged. Native assessment unavailable (untracked inventory declaration required); no native review/receipt claimed. Implementation commit: 0cdf01c, 213 additions + 9 deletions = 222 authored changes. Final progress bookkeeping is a separate documentation commit in the same slice.
-- No deployment authorized; static-root exclusion and private runtime must be verified before release, and no real client data may be added here.
-
+- Commit0cdf01c on feature/portal-02-access-policy fromf59cbbd, trackerb198daa;222authored. Deny-default active-role case/record reads, client audience isolation, removed/stale links deny, exact identifiers, malformed/nullprototype safety. REDmissingmodule thenGREEN9/9/refactor9/9;root5/5. Independent9/9+5/5,2048matrix+31malformed, parent9/9,15existingfilehashes unchanged. Pure runtime, no auth/database endpoints. Nativeassessment unavailable(untracked inventory), no receipt. Later units supply actual runtime evidence; root/static release isolation required.
 ## ODD-11a portal upload boundary
 
 - [x] ODD-11a: delegated isolated upload protection on feature/portal-08-deploy-boundary from f83445d. Before source edits, observe dry inventory RED for the ignored DPAPI file. Add portal/web/.vercelignore and synthetic contract tests outside deployed app; exclude all env/DPAPI/tests/dependency/build-cache files while retaining application source and lockfile.
@@ -307,3 +297,9 @@ Next unresolved decisions: schema and operating constraints before persistence/a
 - Strict SQL RED before schema, GREEN real roles/crossclient/crossstaff/adminAAL/inactive/rotation/metadata/malformed/FK/write denial, baseline63SQL and app31/typecheck. No remote data/migration, new secrets, deployment or native review. Rollback only local case schema/tests/docs; no destructive rollback against populated remote tables. Forecast300-400 authored first slice.
 - MFA candidate approved with acknowledgement burned review-89aa1144a887d783 at cf69179; parent31tests passed. Deferred follow-ups: verify-false test must explicitly use AAL2; lost enrollment response leaves pending factor with generic error. Neither reopened closed review.
 - ODD04a.1 evidence: RED missing cases exit1 before migration. Initial migration rolled back because local image lacks auth.jwt; read verified request.jwt.claims directly instead. GREEN case47/47+profile63/63; app31/31/typecheck exit0. No writes/RPC/audit yet; no remote changes. All synthetic fixture rows roll back. Commit `4b37f9a` (215 authored changes); native assessment parent-owned.
+
+### ODD-04a.2 write intent
+
+- Child feature/portal-12-case-writes from b3b9195. Admin-AAL2 create atomically validates unique nonempty client links and staff roles, creates case and audit; assigned staff/admin update locks case and writes timestamp/audit. Private immutable audit readable only scoped staff/admin. Exact-email admin-only participant lookup (matching requested role, max1) supplies first UI without profile enumeration. Reassignment deferred. No direct user writes or caller identity override.
+- Strict SQL RED/GREEN: denied caller/AAL/active/rotation, bad links/status, atomic rollback, successful audit and audit edit denial; baseline110SQL/app31/typecheck. No real data/cloud/native actions. Prior read candidate medium approved, acknowledgement burned review-7e2765df8cfb2a0b; parent110SQLpassed. Forecastunder400; rollback scoped migration/RPC/tests, preserve existing data.
+- ODD04a.2 evidence: RED exit1 missing RPC/audit before migration; GREEN47read+37write+63profile=147SQL, app31/typecheck exit0. Atomic auditfailure rollback proven; synthetic fixtures rollback. Exact-email picker included; reassignment/UI/auditreadRPC deferred. No remote changes/native invocation; no real data. Commit pending.
