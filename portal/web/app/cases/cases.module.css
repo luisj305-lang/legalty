@@ -86,7 +86,7 @@
 .caseForm { display: grid; gap: 22px; }
 .caseForm > div { display: grid; gap: 8px; }
 .caseForm label { font-weight: 700; }
-.caseForm input, .caseForm textarea { width: 100%; box-sizing: border-box; padding: 12px 14px; border: 1px solid #9eafbd; border-radius: 0; color: var(--ink); background: #fff; font: inherit; }
+.caseForm input, .caseForm textarea, .caseForm select { width: 100%; box-sizing: border-box; padding: 12px 14px; border: 1px solid #9eafbd; border-radius: 0; color: var(--ink); background: #fff; font: inherit; }
 .caseForm textarea { resize: vertical; }
 .caseForm small { color: var(--muted); line-height: 1.5; }
 .caseForm .formActions { display: flex; grid-template-columns: auto auto; align-items: center; justify-content: start; gap: 20px; }

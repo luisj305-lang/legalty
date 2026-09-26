@@ -10,6 +10,7 @@ export default async function CaseDetail({ params }: { params: Promise<{ id: str
   return <>
     <a href="/cases">← Mis casos</a><p className="eyebrow">{row.reference}</p><h1>{row.title}</h1>
     <span className={`case-badge ${row.status}`}>{statusLabels[row.status]}</span>
+    {view.role !== 'client' && <p><a href={`/cases/${row.id}/edit`}>Editar caso</a></p>}
     <div className="case-detail-grid"><section className="case-panel"><h2>Resumen del caso</h2>
       <p className="preserve-lines">{row.description || 'Aún no hay un resumen registrado.'}</p></section>
       <section className="case-panel"><h2>Próximo paso</h2><p className="preserve-lines">{row.next_action || 'Pendiente de definición por el equipo.'}</p>

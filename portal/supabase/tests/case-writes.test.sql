@@ -38,6 +38,12 @@ select is((select count(*) from portal_private.case_audit),1::bigint,'Failed cre
 select set_config('request.jwt.claims','{"aal":"aal1"}',true);
 select is((select count(*) from public.find_case_participant('synthetic4@example.invalid','client')),1::bigint,'Admin AAL1 reaches administrator lookup scope');
 select throws_ok($$select public.create_case('DENIED','Synthetic','',array[]::uuid[],array[]::uuid[])$$,'22023',null,'Admin AAL1 reaches participant validation');
+select cmp_ok(strpos(pg_get_functiondef('public.update_case(uuid,text,text,text,text)'::regprocedure),'portal_private.current_role()'),'<',
+  strpos(pg_get_functiondef('public.update_case(uuid,text,text,text,text)'::regprocedure),'for update'),
+  'Update checks trusted role before target case row lock');
+select cmp_ok(strpos(pg_get_functiondef('public.update_case(uuid,text,text,text,text)'::regprocedure),'portal_private.can_read_case(target_case)'),'<',
+  strpos(pg_get_functiondef('public.update_case(uuid,text,text,text,text)'::regprocedure),'for update'),
+  'Update checks assignment scope before target case row lock');
 select set_config('request.jwt.claim.sub','20000000-0000-4000-8000-000000000002',true);
 select lives_ok($$select public.update_case((select id from public.cases where reference='WRITE-A'),
   'Updated','Visible update','in_progress','Next step')$$,'Assigned staff AAL1 updates');
