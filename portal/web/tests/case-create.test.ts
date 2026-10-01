@@ -35,7 +35,7 @@ test('admin resolves every exact participant before one atomic create', async ()
     clientEmails: 'first@example.com\nSECOND@example.com',
     staffEmails: 'lawyer@example.com\nassistant@example.com',
   }), origin, origin, source);
-  assert.equal(result, `/cases/${caseId}`);
+  assert.equal(result, `/portal/cases/${caseId}`);
   assert.deepEqual(calls.slice(0, 4), [
     ['find', 'first@example.com', 'client'], ['find', 'SECOND@example.com', 'client'],
     ['find', 'lawyer@example.com', 'staff'], ['find', 'assistant@example.com', 'staff'],
@@ -49,13 +49,13 @@ test('admin resolves every exact participant before one atomic create', async ()
 
 test('foreign origins and non-admin access stop before participant lookup or write', async () => {
   const foreign = fixture();
-  assert.equal(await submitCase(form(), 'https://foreign.example', origin, foreign.source), '/cases/new?error=create');
+  assert.equal(await submitCase(form(), 'https://foreign.example', origin, foreign.source), '/portal/cases/new?error=create');
   assert.deepEqual(foreign.calls, []);
 
   for (const role of ['client', 'staff'] as const) {
     const denied = fixture();
     denied.source.access = async () => ({ state: 'eligible', userId: 'user-id', role });
-    assert.equal(await submitCase(form(), origin, origin, denied.source), '/cases');
+    assert.equal(await submitCase(form(), origin, origin, denied.source), '/portal/cases');
     assert.deepEqual(denied.calls, []);
   }
 });
@@ -77,7 +77,7 @@ test('unknown or duplicate fields, malformed values, duplicate emails and limits
     const denied = fixture();
     let accessed = false;
     denied.source.access = async () => { accessed = true; return { state: 'eligible', userId: 'admin-id', role: 'admin' }; };
-    assert.equal(await submitCase(make(), origin, origin, denied.source), '/cases/new?error=create');
+    assert.equal(await submitCase(make(), origin, origin, denied.source), '/portal/cases/new?error=create');
     assert.equal(accessed, false);
     assert.deepEqual(denied.calls, []);
   });
@@ -97,7 +97,7 @@ test('every lookup row must have the requested exact email, role and UUID before
   for (const [name, row] of badRows) await t.test(name, async () => {
     const denied = fixture();
     denied.source.findParticipant = async () => row;
-    assert.equal(await submitCase(form(), origin, origin, denied.source), '/cases/new?error=create');
+    assert.equal(await submitCase(form(), origin, origin, denied.source), '/portal/cases/new?error=create');
     assert.equal(denied.calls.some(call => Array.isArray(call) && call[0] === 'create'), false);
   });
 });
@@ -109,7 +109,7 @@ test('provider and database failures remain generic', async () => {
       throw new Error('SYNTHETIC_DATABASE_SECRET');
     };
     const result = await submitCase(form(), origin, origin, denied.source);
-    assert.equal(result, '/cases/new?error=create');
+    assert.equal(result, '/portal/cases/new?error=create');
     assert.doesNotMatch(result, /database|secret/i);
   }
 });

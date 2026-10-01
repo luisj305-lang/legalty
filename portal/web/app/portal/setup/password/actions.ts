@@ -2,9 +2,9 @@
 
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { serverClient } from '../../../lib/supabase/next-client';
-import { preparePasswordCompletion } from '../../../lib/supabase/password-completion';
-import { setupPassword } from '../../../lib/auth/password-setup';
+import { serverClient } from '../../../../lib/supabase/next-client';
+import { preparePasswordCompletion } from '../../../../lib/supabase/password-completion';
+import { setupPassword } from '../../../../lib/auth/password-setup';
 
 export async function changePassword(form: FormData) {
   // Lazily construct the session client only after origin and input validation.

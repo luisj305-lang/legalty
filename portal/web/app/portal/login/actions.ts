@@ -2,8 +2,8 @@
 
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { serverClient } from '../../lib/supabase/next-client';
-import { mutateSession } from '../../lib/auth/mutations';
+import { serverClient } from '../../../lib/supabase/next-client';
+import { mutateSession } from '../../../lib/auth/mutations';
 
 async function perform(action: 'login' | 'logout', form: FormData) {
   const destination = await mutateSession(action, form, (await headers()).get('origin'),

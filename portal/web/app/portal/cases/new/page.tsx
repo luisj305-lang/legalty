@@ -1,4 +1,4 @@
-import { caseAdminAccess } from '../../../lib/cases/server';
+import { caseAdminAccess } from '../../../../lib/cases/server';
 import { createCase } from './actions';
 import styles from '../cases.module.css';
 
@@ -27,7 +27,7 @@ export default async function NewCase({ searchParams }: { searchParams: Promise<
         <div><label htmlFor="staffEmails">Correos del equipo (opcional)</label>
           <textarea id="staffEmails" name="staffEmails" rows={3} maxLength={25500} aria-describedby="staff-help" />
           <small id="staff-help">Un correo exacto por línea. Solo se aceptan perfiles con rol de equipo.</small></div>
-        <div className={styles.formActions}><button type="submit">Crear caso</button><a href="/cases">Cancelar</a></div>
+        <div className={styles.formActions}><button type="submit">Crear caso</button><a href="/portal/cases">Cancelar</a></div>
       </form>
     </section>
   </>;

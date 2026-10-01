@@ -57,7 +57,7 @@ test('admin resolves exact emails then performs one route-bound replacement with
   const { source, calls } = fixture();
   const result = await submitParticipantUpdate(caseId, expected,
     form('SECOND@example.com\nfirst@example.com', 'lawyer@example.com'), origin, origin, source);
-  assert.equal(result, `/cases/${caseId}`);
+  assert.equal(result, `/portal/cases/${caseId}`);
   assert.deepEqual(calls.slice(0, 4), [
     ['visible', caseId], ['find', 'SECOND@example.com', 'client'],
     ['find', 'first@example.com', 'client'], ['find', 'lawyer@example.com', 'staff'],
@@ -71,7 +71,7 @@ test('admin resolves exact emails then performs one route-bound replacement with
 test('RPC false is a successful no-op', async () => {
   const { source } = fixture();
   source.replaceParticipants = async () => false;
-  assert.equal(await submitParticipantUpdate(caseId, expected, form(), origin, origin, source), `/cases/${caseId}`);
+  assert.equal(await submitParticipantUpdate(caseId, expected, form(), origin, origin, source), `/portal/cases/${caseId}`);
 });
 
 test('origin, route, closed fields, email syntax, duplicates and bounds fail before access', async () => {
@@ -98,29 +98,29 @@ test('origin, route, closed fields, email syntax, duplicates and bounds fail bef
 test('ineligible, invisible, malformed and failed provider paths remain safe and generic', async () => {
   for (const role of ['staff', 'client'] as const) {
     const denied = fixture(role);
-    assert.equal(await submitParticipantUpdate(caseId, expected, form(), origin, origin, denied.source), `/cases/${caseId}`);
+    assert.equal(await submitParticipantUpdate(caseId, expected, form(), origin, origin, denied.source), `/portal/cases/${caseId}`);
     assert.deepEqual(denied.calls, []);
   }
   const signedOut = fixture();
   signedOut.source.access = async () => ({ state: 'signed_out' });
-  assert.equal(await submitParticipantUpdate(caseId, expected, form(), origin, origin, signedOut.source), '/login');
+  assert.equal(await submitParticipantUpdate(caseId, expected, form(), origin, origin, signedOut.source), '/portal/login');
   const pending = fixture();
   pending.source.access = async () => ({ state: 'setup_pending', userId: 'pending-id' });
-  assert.equal(await submitParticipantUpdate(caseId, expected, form(), origin, origin, pending.source), '/account');
+  assert.equal(await submitParticipantUpdate(caseId, expected, form(), origin, origin, pending.source), '/portal/account');
   for (const failure of ['invisible', 'lookup', 'replace'] as const) {
     const denied = fixture();
     if (failure === 'invisible') denied.source.visibleCase = async () => null;
     if (failure === 'lookup') denied.source.findParticipant = async () => [{ id: clientId, email: 'other@example.com', role: 'client' }];
     if (failure === 'replace') denied.source.replaceParticipants = async () => { throw new Error('SYNTHETIC_DATABASE_SECRET'); };
     const result = await submitParticipantUpdate(caseId, expected, form(), origin, origin, denied.source);
-    assert.ok(result === '/cases' || result === `/cases/${caseId}/edit?error=participants`);
+    assert.ok(result === '/portal/cases' || result === `/portal/cases/${caseId}/edit?error=participants`);
     if (failure !== 'replace') assert.equal(denied.calls.some(call => Array.isArray(call) && call[0] === 'replace'), false);
     assert.doesNotMatch(result, /database|secret/i);
   }
 });
 
 test('edit integration keeps participant reads and controls administrator-only', () => {
-  const page = readFileSync(new URL('../app/cases/[id]/edit/page.tsx', import.meta.url), 'utf8');
+  const page = readFileSync(new URL('../app/portal/cases/[id]/edit/page.tsx', import.meta.url), 'utf8');
   const server = readFileSync(new URL('../lib/cases/server.ts', import.meta.url), 'utf8');
   assert.match(page, /view\.role === 'admin'\s*\? await caseParticipants/);
   assert.match(page, /replaceCaseParticipants\.bind\(null, row\.id,\s*participants\.clientIds, participants\.staffIds\)/);

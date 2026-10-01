@@ -19,6 +19,8 @@ test('refresh forwards every cookie, deletion and cache header across multiple w
   assert.equal(response.cookies.get('chunk-2')?.maxAge, 0);
   assert.equal(response.cookies.get('chunk-1')?.httpOnly, true);
   assert.equal(response.cookies.get('chunk-1')?.sameSite, 'lax');
+  assert.equal(response.cookies.get('chunk-1')?.path, '/portal');
+  assert.equal(response.cookies.get('chunk-2')?.path, '/portal');
   for (const [key, value] of [['cache-control', 'private, no-store'], ['expires', '0'], ['pragma', 'no-cache']]) {
     assert.equal(response.headers.get(key), value);
   }

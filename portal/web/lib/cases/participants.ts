@@ -55,8 +55,8 @@ export function parseCaseParticipants(value: unknown): CaseParticipants | null {
 
 export async function submitParticipantUpdate(id: string, expectedValue: ParticipantSets, form: FormData,
   origin: string | null, configured: string | undefined, source: ParticipantUpdateSource) {
-  if (!caseId(id)) return '/cases';
-  const failure = `/cases/${id}/edit?error=participants`;
+  if (!caseId(id)) return '/portal/cases';
+  const failure = `/portal/cases/${id}/edit?error=participants`;
   if (!trustedOrigin(origin, configured)) return failure;
   for (const name of new Set(form.keys())) {
     if ((!fields.has(name) && !name.startsWith('$ACTION_')) || form.getAll(name).length !== 1) return failure;
@@ -74,11 +74,11 @@ export async function submitParticipantUpdate(id: string, expectedValue: Partici
 
   try {
     const access = await source.access();
-    if (access.state === 'signed_out') return '/login';
-    if (access.state === 'setup_pending') return '/account';
-    if (access.state !== 'eligible' || access.role !== 'admin') return `/cases/${id}`;
+    if (access.state === 'signed_out') return '/portal/login';
+    if (access.state === 'setup_pending') return '/portal/account';
+    if (access.state !== 'eligible' || access.role !== 'admin') return `/portal/cases/${id}`;
     const visible = await source.visibleCase(id);
-    if (!visible || typeof visible !== 'object' || (visible as Record<string, unknown>).id !== id) return '/cases';
+    if (!visible || typeof visible !== 'object' || (visible as Record<string, unknown>).id !== id) return '/portal/cases';
     const used = new Set<string>();
     const resolve = async (values: string[], role: ParticipantRole) => {
       const result: string[] = [];
@@ -94,6 +94,6 @@ export async function submitParticipantUpdate(id: string, expectedValue: Partici
     const staffIds = await resolve(staffEmails, 'staff');
     if (!staffIds) return failure;
     const replaced = await source.replaceParticipants(id, expected, { clientIds, staffIds });
-    return typeof replaced === 'boolean' ? `/cases/${id}` : failure;
+    return typeof replaced === 'boolean' ? `/portal/cases/${id}` : failure;
   } catch { return failure; }
 }

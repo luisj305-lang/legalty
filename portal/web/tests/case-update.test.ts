@@ -27,7 +27,7 @@ function fixture(role: 'admin' | 'staff' | 'client' = 'admin') {
 test('fresh admin and assigned staff validate visibility before one scoped update', async () => {
   for (const role of ['admin', 'staff'] as const) {
     const { source, calls } = fixture(role);
-    assert.equal(await submitCaseUpdate(id, form(), origin, origin, source), `/cases/${id}`);
+    assert.equal(await submitCaseUpdate(id, form(), origin, origin, source), `/portal/cases/${id}`);
     assert.deepEqual(calls, [
       ['visible', id],
       ['update', id, { title: 'Updated case', description: 'Client-visible update',
@@ -39,11 +39,11 @@ test('fresh admin and assigned staff validate visibility before one scoped updat
 test('only the four canonical database statuses are accepted', async () => {
   for (const status of ['open', 'in_progress', 'waiting', 'closed']) {
     const { source } = fixture();
-    assert.equal(await submitCaseUpdate(id, form({ status }), origin, origin, source), `/cases/${id}`);
+    assert.equal(await submitCaseUpdate(id, form({ status }), origin, origin, source), `/portal/cases/${id}`);
   }
   const denied = fixture();
   assert.equal(await submitCaseUpdate(id, form({ status: 'review' }), origin, origin, denied.source),
-    `/cases/${id}/edit?error=update`);
+    `/portal/cases/${id}/edit?error=update`);
   assert.deepEqual(denied.calls, []);
 });
 
@@ -64,7 +64,7 @@ test('foreign origin, malformed route id and tampered or invalid fields fail bef
     let accessed = false;
     denied.source.access = async () => { accessed = true; return { state: 'eligible', userId: 'admin-id', role: 'admin' }; };
     const result = await submitCaseUpdate(caseId, make(), requestOrigin, origin, denied.source);
-    assert.equal(result, caseId === id ? `/cases/${id}/edit?error=update` : '/cases');
+    assert.equal(result, caseId === id ? `/portal/cases/${id}/edit?error=update` : '/portal/cases');
     assert.equal(accessed, false);
     assert.deepEqual(denied.calls, []);
   });
@@ -72,27 +72,27 @@ test('foreign origin, malformed route id and tampered or invalid fields fail bef
 
 test('clients and ineligible sessions stop before scope lookup and write', async () => {
   const client = fixture('client');
-  assert.equal(await submitCaseUpdate(id, form(), origin, origin, client.source), `/cases/${id}`);
+  assert.equal(await submitCaseUpdate(id, form(), origin, origin, client.source), `/portal/cases/${id}`);
   assert.deepEqual(client.calls, []);
 
   const signedOut = fixture();
   signedOut.source.access = async () => ({ state: 'signed_out' });
-  assert.equal(await submitCaseUpdate(id, form(), origin, origin, signedOut.source), '/login');
+  assert.equal(await submitCaseUpdate(id, form(), origin, origin, signedOut.source), '/portal/login');
   const pending = fixture();
   pending.source.access = async () => ({ state: 'setup_pending', userId: 'pending-id' });
-  assert.equal(await submitCaseUpdate(id, form(), origin, origin, pending.source), '/account');
+  assert.equal(await submitCaseUpdate(id, form(), origin, origin, pending.source), '/portal/account');
 });
 
 test('assignment-scope mismatch and provider failures never reach the update RPC', async () => {
   for (const visible of [null, {}, { id: '22222222-2222-4222-8222-222222222222' }]) {
     const denied = fixture('staff');
     denied.source.visibleCase = async () => visible;
-    assert.equal(await submitCaseUpdate(id, form(), origin, origin, denied.source), '/cases');
+    assert.equal(await submitCaseUpdate(id, form(), origin, origin, denied.source), '/portal/cases');
     assert.equal(denied.calls.some(call => Array.isArray(call) && call[0] === 'update'), false);
   }
   const failed = fixture();
   failed.source.updateCase = async () => { throw new Error('SYNTHETIC_POSTGRES_SECRET'); };
   const result = await submitCaseUpdate(id, form(), origin, origin, failed.source);
-  assert.equal(result, `/cases/${id}/edit?error=update`);
+  assert.equal(result, `/portal/cases/${id}/edit?error=update`);
   assert.doesNotMatch(result, /postgres|secret/i);
 });

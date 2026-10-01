@@ -21,7 +21,7 @@ export async function refreshSession(request: NextRequest, factory = createReque
           if (value) response.headers.set(header, value);
         }
         for (const { name, value, options } of values) response.cookies.set(name, value, {
-          ...options, httpOnly: true, sameSite: 'lax', path: '/',
+          ...options, httpOnly: true, sameSite: 'lax', path: '/portal',
           secure: !!process.env.PORTAL_ORIGIN?.startsWith('https://'),
         });
         for (const [name, value] of Object.entries(headers)) response.headers.set(name, value);

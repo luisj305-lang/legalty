@@ -34,7 +34,7 @@ test('origin and input deny before provider work, never accept identity or privi
     (f: FormData) => { f.set('password', 'a'.repeat(73)); f.set('confirmation', 'a'.repeat(73)); },
   ]) {
     const { form, source, calls } = fixture(); mutate(form);
-    assert.equal(await setupPassword(form, origin, origin, source), '/setup/password?error=update');
+    assert.equal(await setupPassword(form, origin, origin, source), '/portal/setup/password?error=update');
     assert.deepEqual(calls, []);
   }
   for (const invalid of [null, 'https://foreign.example', 'http://portal.example']) {
@@ -45,7 +45,7 @@ test('origin and input deny before provider work, never accept identity or privi
 
 test('only verified provider success permits own-profile completion and fresh read', async () => {
   const { form, source, calls } = fixture();
-  assert.equal(await setupPassword(form, origin, origin, source), '/setup/password?status=updated');
+  assert.equal(await setupPassword(form, origin, origin, source), '/portal/setup/password?status=updated');
   assert.deepEqual(calls, ['identity', 'prepare', 'password', 'complete', 'read']);
 });
 
@@ -55,7 +55,7 @@ test('missing identity or server configuration cannot change password', async ()
     if (stage === 'identity') source.verifyIdentity = async () => null;
     else source.prepareCompletion = async () => null;
     const result = await setupPassword(form, origin, origin, source);
-    assert.ok(result === '/login' || result === '/setup/password?error=update');
+    assert.ok(result === '/portal/login' || result === '/portal/setup/password?error=update');
     assert.ok(!calls.includes('password'));
   }
 });
@@ -67,7 +67,7 @@ test('provider/MFA failure never completes; partial completion stays pending wit
     if (stage === 'completion') source.prepareCompletion = async () => async () => false;
     if (stage === 'read') source.readRotation = async () => true;
     if (stage === 'throw') source.updatePassword = async () => { throw new Error('SYNTHETIC_PRIVATE_ERROR'); };
-    assert.equal(await setupPassword(form, origin, origin, source), '/setup/password?error=update');
+    assert.equal(await setupPassword(form, origin, origin, source), '/portal/setup/password?error=update');
     if (stage === 'provider' || stage === 'throw') assert.ok(!calls.includes('complete'));
     assert.ok(calls.filter(x => x === 'password').length <= 1);
   }

@@ -2,9 +2,9 @@
 
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { submitCase } from '../../../lib/cases/create';
-import { serverClient } from '../../../lib/supabase/next-client';
-import { accountAccess } from '../../../lib/supabase/server';
+import { submitCase } from '../../../../lib/cases/create';
+import { serverClient } from '../../../../lib/supabase/next-client';
+import { accountAccess } from '../../../../lib/supabase/server';
 
 export async function createCase(form: FormData) {
   let client: Awaited<ReturnType<typeof serverClient>> | undefined;

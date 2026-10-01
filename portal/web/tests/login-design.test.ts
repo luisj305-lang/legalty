@@ -3,8 +3,8 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
 test('approved login keeps native authentication in a responsive split presentation', () => {
-  const page = readFileSync(new URL('../app/login/page.tsx', import.meta.url), 'utf8');
-  const css = readFileSync(new URL('../app/login/login.css', import.meta.url), 'utf8');
+  const page = readFileSync(new URL('../app/portal/login/page.tsx', import.meta.url), 'utf8');
+  const css = readFileSync(new URL('../app/portal/login/login.css', import.meta.url), 'utf8');
   assert.match(page, /className="login-layout"/);
   assert.match(page, /action=\{login\}/);
   assert.match(page, /role="alert"/);

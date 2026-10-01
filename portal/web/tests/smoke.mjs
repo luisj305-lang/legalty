@@ -31,6 +31,8 @@ try {
     await new Promise(resolve => setTimeout(resolve, 100));
   }
   assert.ok(address && output.includes('Ready'), `Server not ready: ${output}`);
+
+  // Public landing stays at the root with lang="es".
   for (const path of ['', '/index', '/index.html', '/about', '/about.html', '/services',
     '/services.html', '/contact', '/contact.html', '/success', '/success.html', '/failure', '/failure.html']) {
     const response = await fetch(`${address}${path}`, { signal: AbortSignal.timeout(5000) });
@@ -42,51 +44,77 @@ try {
   assert.match(await (await fetch(`${address}/assets/css/main.css`)).text(), /site-header/);
   const missing = await fetch(`${address}/client/cases`, { signal: AbortSignal.timeout(5000) });
   assert.equal(missing.status, 404);
-  const account = await fetch(`${address}/account`, { redirect: 'manual' });
-  assert.equal(account.status, 307);
-  assert.equal(account.headers.get('location'), '/login');
-  assert.match(account.headers.get('cache-control'), /no-store/);
-  const login = await fetch(`${address}/login`);
+
+  // Unprefixed portal paths must not become an alternate protected surface.
+  for (const path of ['/login', '/account', '/cases']) {
+    const response = await fetch(`${address}${path}`, { redirect: 'manual' });
+    assert.equal(response.status, 404, `${path} must be 404, not a protected copy`);
+  }
+
+  // The portal index and login resolve under /portal.
+  const portal = await fetch(`${address}/portal`, { redirect: 'manual' });
+  assert.equal(portal.status, 200, '/portal');
+  assert.match(await portal.text(), /lang="es"/, '/portal');
+  const login = await fetch(`${address}/portal/login`);
+  assert.equal(login.status, 200, '/portal/login');
   const loginHtml = await login.text();
   assert.match(loginHtml, /type="password"/);
+  assert.match(loginHtml, /href="\/"/, 'login keeps the public-home link at /');
+
+  // The portal background asset resolves under /portal.
+  const asset = await fetch(`${address}/portal/login-architecture-v1.webp`, { signal: AbortSignal.timeout(5000) });
+  assert.equal(asset.status, 200, '/portal/login-architecture-v1.webp');
+
+  // Logged-out protected flows redirect to the prefixed login.
+  const account = await fetch(`${address}/portal/account`, { redirect: 'manual' });
+  assert.equal(account.status, 307);
+  assert.equal(account.headers.get('location'), '/portal/login');
+  assert.match(account.headers.get('cache-control'), /no-store/);
+
+  // Native server-action login returns the prefixed generic failure redirect.
   const action = loginHtml.match(/name="(\$ACTION_ID_[^"]+)"/);
   assert.ok(action, 'Native server-action form must work without JavaScript');
   const body = new FormData();
   body.set(action[1], '');
   body.set('email', 'synthetic@example.invalid');
   body.set('password', 'synthetic-only');
-  const invalid = await fetch(`${address}/login`, { method: 'POST', body,
+  const invalid = await fetch(`${address}/portal/login`, { method: 'POST', body,
     headers: { origin: address }, redirect: 'manual' });
   assert.equal(invalid.status, 303);
-  assert.equal(invalid.headers.get('location'), '/login?error=credentials');
-  const error = await (await fetch(`${address}/login?error=credentials`)).text();
+  assert.equal(invalid.headers.get('location'), '/portal/login?error=credentials');
+  const error = await (await fetch(`${address}/portal/login?error=credentials`)).text();
   assert.match(error, /No fue posible iniciar sesión/);
   assert.doesNotMatch(error, /synthetic@example/);
+
   for (const path of ['password', 'mfa']) {
-    const setup = await fetch(`${address}/setup/${path}`, { redirect: 'manual' });
+    const setup = await fetch(`${address}/portal/setup/${path}`, { redirect: 'manual' });
     assert.equal(setup.status, 307);
-    assert.equal(setup.headers.get('location'), '/login');
+    assert.equal(setup.headers.get('location'), '/portal/login');
     assert.match(setup.headers.get('cache-control'), /no-store/);
   }
   for (const route of ['cases', 'cases/new', 'cases/11111111-1111-4111-8111-111111111111',
     'cases/11111111-1111-4111-8111-111111111111/edit']) {
-    const denied = await fetch(`${address}/${route}`, { redirect: 'manual' });
+    const denied = await fetch(`${address}/portal/${route}`, { redirect: 'manual' });
     assert.equal(denied.status, 307);
-    assert.equal(denied.headers.get('location'), '/login');
+    assert.equal(denied.headers.get('location'), '/portal/login');
     assert.match(denied.headers.get('cache-control'), /no-store/);
   }
+
+  // Foreign-origin mutations are rejected for every prefixed portal route.
   for (const route of ['login', 'account', 'setup/password', 'setup/mfa', 'cases', 'cases/new',
     'cases/11111111-1111-4111-8111-111111111111/edit']) {
-    const denied = await fetch(`${address}/${route}`, { method: 'POST', body,
+    const denied = await fetch(`${address}/portal/${route}`, { method: 'POST', body,
       headers: { origin: 'https://foreign.example' }, redirect: 'manual' });
-    assert.equal(denied.status, 403);
+    assert.equal(denied.status, 403, `/portal/${route} foreign POST`);
   }
+
+  // Real API handlers stay at the public root.
   for (const route of ['api/contact', 'api/create-preference', 'api/webhook']) {
     const methodNotAllowed = await fetch(`${address}/${route}`, { signal: AbortSignal.timeout(5000) });
     assert.equal(methodNotAllowed.status, 405, `${route} GET status`);
     assert.equal(methodNotAllowed.headers.get('allow'), 'POST', `${route} Allow header`);
   }
-  console.log('PASS: public root routes and assets, real /api/* method-not-allowed contract, logged-out case create/update redirects, no-store, generic failure, foreign-origin rejection, scoped server');
+  console.log('PASS: public root routes and assets, /portal containment, real /api/* method-not-allowed contract, logged-out prefixed redirects, no-store, generic failure, foreign-origin rejection, scoped server');
 } finally {
   if (child.exitCode === null) {
     const exited = once(child, 'exit');

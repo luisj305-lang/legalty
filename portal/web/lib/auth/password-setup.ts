@@ -9,7 +9,7 @@ export interface PasswordSource {
 
 export async function setupPassword(form: FormData, origin: string | null,
   configured: string | undefined, source: PasswordSource) {
-  const failure = '/setup/password?error=update';
+  const failure = '/portal/setup/password?error=update';
   if (!trustedOrigin(origin, configured)) return failure;
   for (const name of form.keys()) {
     if (!['password', 'confirmation'].includes(name) && !name.startsWith('$ACTION_')) return failure;
@@ -20,11 +20,11 @@ export async function setupPassword(form: FormData, origin: string | null,
       new TextEncoder().encode(password).length > 72 || password !== form.get('confirmation')) return failure;
   try {
     const id = await source.verifyIdentity();
-    if (!id || !/^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(id)) return '/login';
+    if (!id || !/^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(id)) return '/portal/login';
     // Fail before changing credentials if trusted completion is not configured.
     const complete = await source.prepareCompletion(id);
     if (!complete || !await source.updatePassword(password)) return failure;
     if (!await complete() || await source.readRotation(id) !== false) return failure;
-    return '/setup/password?status=updated';
+    return '/portal/setup/password?status=updated';
   } catch { return failure; }
 }

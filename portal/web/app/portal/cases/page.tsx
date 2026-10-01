@@ -1,12 +1,12 @@
-import { caseView } from '../../lib/cases/server';
-import { statusLabels, summarizeCases } from '../../lib/cases/read';
+import { caseView } from '../../../lib/cases/server';
+import { statusLabels, summarizeCases } from '../../../lib/cases/read';
 import styles from './cases.module.css';
 
 export default async function Cases() {
   const view = await caseView();
   if (view.state !== 'ready') return <section className={`${styles.panel} ${styles.statePanel}`} role="alert">
     <p className={styles.eyebrow}>PORTAL DE CLIENTES</p><h1>Casos no disponibles</h1>
-    <p>No pudimos consultar tus casos. Intenta nuevamente.</p><a href="/cases">Volver a consultar</a>
+    <p>No pudimos consultar tus casos. Intenta nuevamente.</p><a href="/portal/cases">Volver a consultar</a>
   </section>;
   const counts = summarizeCases(view.rows);
   const metrics = [
@@ -23,11 +23,11 @@ export default async function Cases() {
         <div className={styles.metric} key={label}><span>{label}</span><strong>{count}</strong></div>)}
     </div>
     <section className={styles.panel}><div className={styles.sectionHeading}><h2>Casos autorizados</h2><div>
-      {view.role === 'admin' && <a className={styles.primaryLink} href="/cases/new">Crear caso</a>}
+      {view.role === 'admin' && <a className={styles.primaryLink} href="/portal/cases/new">Crear caso</a>}
       <span>Actualización más reciente primero</span></div></div>
       {view.rows.length === 0 ? <div className={styles.empty}><h3>Todavía no tienes casos visibles</h3><p>Cuando el equipo vincule un caso a tu cuenta, podrás seguirlo aquí.</p></div> :
         <ul className={styles.caseList}>{view.rows.map(row => <li key={row.id}>
-          <div className={styles.caseSummary}><span className={styles.reference}>{row.reference}</span><h3><a href={`/cases/${row.id}`}>{row.title}</a></h3>
+          <div className={styles.caseSummary}>            <span className={styles.reference}>{row.reference}</span><h3><a href={`/portal/cases/${row.id}`}>{row.title}</a></h3>
             <span className={styles.nextLabel}>Próximo paso</span><p>{row.next_action || 'El equipo aún no ha registrado el próximo paso.'}</p></div>
           <div className={styles.caseMeta}><span className={`${styles.badge} ${styles[row.status]}`}>{statusLabels[row.status]}</span>
             <span>Actualizado <time dateTime={row.updated_at}>{new Date(row.updated_at).toLocaleDateString('es-CO', { timeZone: 'UTC' })}</time></span></div>

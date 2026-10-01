@@ -15,7 +15,7 @@ export default function Home() {
           <h2>Acceso para cuentas invitadas</h2>
           <p>Ya puedes iniciar sesión con tu cuenta existente. La consulta de casos
             y la carga de documentos todavía no están habilitadas.</p>
-          <p><a href="/login">Iniciar sesión</a></p>
+          <p><a href="/portal/login">Iniciar sesión</a></p>
         </div>
         <p className="guidance">Si ya eres cliente, continúa usando tus canales
           habituales de atención con Legalty.</p>

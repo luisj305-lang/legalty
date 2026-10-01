@@ -2,10 +2,10 @@
 
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { submitCaseUpdate } from '../../../../lib/cases/update';
-import { submitParticipantUpdate, type ParticipantSets } from '../../../../lib/cases/participants';
-import { serverClient } from '../../../../lib/supabase/next-client';
-import { accountAccess } from '../../../../lib/supabase/server';
+import { submitCaseUpdate } from '../../../../../lib/cases/update';
+import { submitParticipantUpdate, type ParticipantSets } from '../../../../../lib/cases/participants';
+import { serverClient } from '../../../../../lib/supabase/next-client';
+import { accountAccess } from '../../../../../lib/supabase/server';
 
 export async function updateCase(id: string, form: FormData) {
   let client: Awaited<ReturnType<typeof serverClient>> | undefined;

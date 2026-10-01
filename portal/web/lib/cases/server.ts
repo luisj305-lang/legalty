@@ -7,17 +7,17 @@ import { parseCaseParticipants } from './participants';
 
 export async function caseAdminAccess() {
   const client = await serverClient().catch(() => null);
-  if (!client) redirect('/login');
+  if (!client) redirect('/portal/login');
   const access = await accountAccess(client);
-  if (access.state === 'signed_out') redirect('/login');
-  if (access.state === 'setup_pending') redirect('/account');
-  if (access.role !== 'admin') redirect('/cases');
+  if (access.state === 'signed_out') redirect('/portal/login');
+  if (access.state === 'setup_pending') redirect('/portal/account');
+  if (access.role !== 'admin') redirect('/portal/cases');
   return access;
 }
 
 export async function caseView(id?: string) {
   const client = await serverClient().catch(() => null);
-  if (!client) redirect('/login');
+  if (!client) redirect('/portal/login');
   const view = await readCaseView({
     access: () => accountAccess(client),
     read: async target => {
@@ -28,19 +28,19 @@ export async function caseView(id?: string) {
       return data;
     },
   }, id);
-  if (view.state === 'signed_out') redirect('/login');
-  if (view.state === 'setup_pending') redirect('/account');
+  if (view.state === 'signed_out') redirect('/portal/login');
+  if (view.state === 'setup_pending') redirect('/portal/account');
   return view;
 }
 
 export async function caseParticipants(id: string) {
   if (!caseId(id)) return null;
   const client = await serverClient().catch(() => null);
-  if (!client) redirect('/login');
+  if (!client) redirect('/portal/login');
   const access = await accountAccess(client);
-  if (access.state === 'signed_out') redirect('/login');
-  if (access.state === 'setup_pending') redirect('/account');
-  if (access.role !== 'admin') redirect('/cases');
+  if (access.state === 'signed_out') redirect('/portal/login');
+  if (access.state === 'setup_pending') redirect('/portal/account');
+  if (access.role !== 'admin') redirect('/portal/cases');
   const { data, error } = await client.rpc('get_case_participants', { target_case: id });
   return error ? null : parseCaseParticipants(data);
 }

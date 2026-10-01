@@ -1,6 +1,6 @@
 import { notFound, redirect } from 'next/navigation';
-import { caseParticipants, caseView } from '../../../../lib/cases/server';
-import { statusLabels } from '../../../../lib/cases/read';
+import { caseParticipants, caseView } from '../../../../../lib/cases/server';
+import { statusLabels } from '../../../../../lib/cases/read';
 import { replaceCaseParticipants, updateCase } from './actions';
 import styles from '../../cases.module.css';
 
@@ -10,9 +10,9 @@ export default async function EditCase({ params, searchParams }: {
 }) {
   const view = await caseView((await params).id);
   if (view.state === 'not_found') notFound();
-  if (view.state !== 'ready') return <section className="case-panel" role="alert"><h1>No fue posible consultar el caso</h1><a href="/cases">Volver a mis casos</a></section>;
+  if (view.state !== 'ready') return <section className="case-panel" role="alert"><h1>No fue posible consultar el caso</h1><a href="/portal/cases">Volver a mis casos</a></section>;
   const row = view.rows[0];
-  if (view.role === 'client') redirect(`/cases/${row.id}`);
+  if (view.role === 'client') redirect(`/portal/cases/${row.id}`);
   const action = updateCase.bind(null, row.id);
   const participants = view.role === 'admin' ? await caseParticipants(row.id) : null;
   const participantAction = participants && replaceCaseParticipants.bind(null, row.id,
@@ -31,7 +31,7 @@ export default async function EditCase({ params, searchParams }: {
           {Object.entries(statusLabels).map(([value, label]) => <option value={value} key={value}>{label}</option>)}</select></div>
         <div><label htmlFor="nextAction">Próximo paso</label>
           <textarea id="nextAction" name="nextAction" defaultValue={row.next_action} rows={4} maxLength={2000} /></div>
-        <div className={styles.formActions}><button type="submit">Guardar cambios</button><a href={`/cases/${row.id}`}>Cancelar</a></div>
+        <div className={styles.formActions}><button type="submit">Guardar cambios</button><a href={`/portal/cases/${row.id}`}>Cancelar</a></div>
       </form>
     </section>
     {view.role === 'admin' && <section className={`${styles.panel} ${styles.createPanel}`}>

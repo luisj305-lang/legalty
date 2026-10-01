@@ -11,7 +11,7 @@ export interface CaseCreateSource {
   createCase(input: CaseCreateInput): Promise<unknown>;
 }
 
-const failure = '/cases/new?error=create';
+const failure = '/portal/cases/new?error=create';
 const uuid = /^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i;
 const email = /^[A-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?(?:\.[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?)+$/i;
 const fields = new Set(['reference', 'title', 'description', 'clientEmails', 'staffEmails']);
@@ -59,9 +59,9 @@ export async function submitCase(form: FormData, origin: string | null,
 
   try {
     const access = await source.access();
-    if (access.state === 'signed_out') return '/login';
-    if (access.state === 'setup_pending') return '/account';
-    if (access.state !== 'eligible' || access.role !== 'admin') return '/cases';
+    if (access.state === 'signed_out') return '/portal/login';
+    if (access.state === 'setup_pending') return '/portal/account';
+    if (access.state !== 'eligible' || access.role !== 'admin') return '/portal/cases';
     const ids = new Set<string>();
     const resolve = async (values: string[], role: ParticipantRole) => {
       const result: string[] = [];
@@ -77,6 +77,6 @@ export async function submitCase(form: FormData, origin: string | null,
     const staffIds = await resolve(staffEmails, 'staff');
     if (!staffIds) return failure;
     const result = await source.createCase({ reference, title, description, clientIds, staffIds });
-    return typeof result === 'string' && uuid.test(result) ? `/cases/${result}` : failure;
+    return typeof result === 'string' && uuid.test(result) ? `/portal/cases/${result}` : failure;
   } catch { return failure; }
 }

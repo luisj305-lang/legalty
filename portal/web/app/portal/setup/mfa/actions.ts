@@ -2,8 +2,8 @@
 
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { serverClient } from '../../../lib/supabase/next-client';
-import { mutateMfa, type MfaState } from '../../../lib/auth/mfa';
+import { serverClient } from '../../../../lib/supabase/next-client';
+import { mutateMfa, type MfaState } from '../../../../lib/auth/mfa';
 
 export async function updateMfa(_previous: MfaState, form: FormData): Promise<MfaState> {
   let client: Awaited<ReturnType<typeof serverClient>>;
@@ -30,6 +30,6 @@ export async function updateMfa(_previous: MfaState, form: FormData): Promise<Mf
       return error ? null : data.currentLevel;
     },
   });
-  if (result.state === 'verified') redirect('/account');
+  if (result.state === 'verified') redirect('/portal/account');
   return result;
 }

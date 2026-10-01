@@ -19,12 +19,12 @@ test('only explicit canonical origins allow mutations, without trusting host hea
 test('bad origin stops login and logout before constructing a provider client', async () => {
   for (const action of ['login', 'logout'] as const) {
     assert.equal(await mutateSession(action, form(), 'https://foreign.example', undefined,
-      () => assert.fail()), '/login?error=credentials');
+      () => assert.fail()), '/portal/login?error=credentials');
   }
 });
 
 test('empty input, provider errors and throws share the generic fixed redirect', async () => {
-  assert.equal(await mutateSession('login', form(), origin, undefined, () => assert.fail()), '/login?error=credentials');
+  assert.equal(await mutateSession('login', form(), origin, undefined, () => assert.fail()), '/portal/login?error=credentials');
   for (const failure of ['return', 'throw']) {
     const data = form(); data.set('email', 'synthetic@example.invalid'); data.set('password', 'synthetic-only');
     data.set('next', 'https://attacker.example');
@@ -32,7 +32,7 @@ test('empty input, provider errors and throws share the generic fixed redirect',
       signIn: async () => { if (failure === 'throw') throw new Error('private'); return false; },
       signOut: async () => true,
     }));
-    assert.equal(result, '/login?error=credentials');
+    assert.equal(result, '/portal/login?error=credentials');
   }
 });
 
@@ -41,9 +41,9 @@ test('successful login and local logout use only fixed destinations', async () =
   const client = async () => ({ signIn: async (email: string, password: string) => {
     assert.equal(email, 'synthetic@example.invalid'); assert.equal(password, 'synthetic-only'); return true;
   }, signOut: async () => true });
-  assert.equal(await mutateSession('login', data, origin, undefined, client), '/account');
-  assert.equal(await mutateSession('logout', data, origin, undefined, client), '/login');
+  assert.equal(await mutateSession('login', data, origin, undefined, client), '/portal/account');
+  assert.equal(await mutateSession('logout', data, origin, undefined, client), '/portal/login');
   assert.equal(await mutateSession('logout', data, origin, undefined, async () => ({
     signIn: async () => true, signOut: async () => false,
-  })), '/account?error=logout');
+  })), '/portal/account?error=logout');
 });

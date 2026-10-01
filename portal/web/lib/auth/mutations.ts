@@ -14,16 +14,16 @@ type SessionActions = {
 
 export async function mutateSession(action: 'login' | 'logout', form: FormData,
   origin: string | null, configured: string | undefined, client: () => Promise<SessionActions>) {
-  const failure = '/login?error=credentials';
+  const failure = '/portal/login?error=credentials';
   if (!trustedOrigin(origin, configured)) return failure;
   try {
-    if (action === 'logout') return await (await client()).signOut() ? '/login' : '/account?error=logout';
+    if (action === 'logout') return await (await client()).signOut() ? '/portal/login' : '/portal/account?error=logout';
     const email = form.get('email');
     const password = form.get('password');
     if (typeof email !== 'string' || !email.includes('@') || email.length > 254 ||
         typeof password !== 'string' || !password || password.length > 1024) return failure;
-    return await (await client()).signIn(email.trim(), password) ? '/account' : failure;
+    return await (await client()).signIn(email.trim(), password) ? '/portal/account' : failure;
   } catch {
-    return action === 'logout' ? '/account?error=logout' : failure;
+    return action === 'logout' ? '/portal/account?error=logout' : failure;
   }
 }

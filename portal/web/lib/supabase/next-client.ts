@@ -10,7 +10,7 @@ export async function serverClient(writable = false) {
       // Proxy refreshes read-only Server Components and sets no-store cache headers.
       if (!writable) return;
       for (const { name, value, options } of values) jar.set(name, value, {
-        ...options, httpOnly: true, sameSite: 'lax', path: '/',
+        ...options, httpOnly: true, sameSite: 'lax', path: '/portal',
         secure: !!process.env.PORTAL_ORIGIN?.startsWith('https://'),
       });
     },

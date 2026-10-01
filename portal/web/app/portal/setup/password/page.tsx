@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { serverClient } from '../../../lib/supabase/next-client';
+import { serverClient } from '../../../../lib/supabase/next-client';
 import { changePassword } from './actions';
 
 export const dynamic = 'force-dynamic';
@@ -8,7 +8,7 @@ export default async function PasswordSetup({ searchParams }: {
 }) {
   const client = await serverClient().catch(() => null);
   const identity = await client?.auth.getUser().catch(() => null);
-  if (!client || identity?.error || !identity?.data.user) redirect('/login');
+  if (!client || identity?.error || !identity?.data.user) redirect('/portal/login');
   const profile = await client.from('profiles').select('must_change_password')
     .eq('id', identity.data.user.id).maybeSingle();
   const params = await searchParams;
@@ -25,7 +25,7 @@ export default async function PasswordSetup({ searchParams }: {
       <input id="confirmation" name="confirmation" type="password" autoComplete="new-password" minLength={12} maxLength={72} required />
       <button type="submit">Guardar contraseña</button>
     </form>
-    <p><a href="/account">Volver a mi cuenta</a></p>
-    <p><a href="/setup/mfa">Configurar autenticador opcional</a></p>
+    <p><a href="/portal/account">Volver a mi cuenta</a></p>
+    <p><a href="/portal/setup/mfa">Configurar autenticador opcional</a></p>
   </section></main>;
 }

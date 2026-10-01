@@ -9,37 +9,37 @@ const optionalSource = (path: string) => {
 };
 
 test('authenticated shell exposes only working navigation and logout', () => {
-  const layout = source('../app/cases/layout.tsx');
+  const layout = source('../app/portal/cases/layout.tsx');
   assert.match(layout, /import styles from ['"]\.\/cases\.module\.css['"]/);
-  assert.match(layout, /href="\/cases"[^>]*aria-current="page"/);
-  assert.match(layout, /href="\/setup\/password"/);
-  assert.match(layout, /href="\/setup\/mfa"/);
+  assert.match(layout, /href="\/portal\/cases"[^>]*aria-current="page"/);
+  assert.match(layout, /href="\/portal\/setup\/password"/);
+  assert.match(layout, /href="\/portal\/setup\/mfa"/);
   assert.match(layout, /action=\{logout\}/);
   assert.doesNotMatch(layout, /href="#"|\/documents|\/messages|\/appointments|\/services|\/payments/);
 });
 
 test('authenticator setup is consistently optional without removing enrollment', () => {
-  const account = source('../app/account/page.tsx');
-  const password = source('../app/setup/password/page.tsx');
-  const mfa = source('../app/setup/mfa/page.tsx');
-  const layout = source('../app/cases/layout.tsx');
+  const account = source('../app/portal/account/page.tsx');
+  const password = source('../app/portal/setup/password/page.tsx');
+  const mfa = source('../app/portal/setup/mfa/page.tsx');
+  const layout = source('../app/portal/cases/layout.tsx');
   for (const page of [account, password, mfa, layout]) assert.match(page, /autenticador opcional/i);
   assert.doesNotMatch(password, /antes del cambio/i);
   assert.match(mfa, /<MfaForm factors=/);
 });
 
 test('dashboard presentation keeps metrics and links grounded in authorized case rows', () => {
-  const page = source('../app/cases/page.tsx');
+  const page = source('../app/portal/cases/page.tsx');
   assert.match(page, /import styles from ['"]\.\/cases\.module\.css['"]/);
   assert.match(page, /summarizeCases\(view\.rows\)/);
-  assert.match(page, /href=\{`\/cases\/\$\{row\.id\}`\}/);
+  assert.match(page, /href=\{`\/portal\/cases\/\$\{row\.id\}`\}/);
   assert.match(page, /view\.rows\.length === 0/);
   assert.match(page, /view\.rows\.length === 50/);
   assert.doesNotMatch(page, /href="#"|progress|percentage|sample|placeholder/i);
 });
 
 test('case workspace stylesheet provides concept colors and responsive layouts', () => {
-  const css = optionalSource('../app/cases/cases.module.css');
+  const css = optionalSource('../app/portal/cases/cases.module.css');
   assert.match(css, /\.shell\s*\{/);
   assert.match(css, /\.sidebar\s*\{/);
   assert.match(css, /\.main\s*\{/);

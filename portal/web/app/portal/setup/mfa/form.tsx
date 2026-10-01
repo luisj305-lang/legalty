@@ -1,7 +1,7 @@
 'use client';
 
 import { useActionState, useEffect, useState } from 'react';
-import type { Factor, MfaState } from '../../../lib/auth/mfa';
+import type { Factor, MfaState } from '../../../../lib/auth/mfa';
 import { updateMfa } from './actions';
 
 export function MfaForm({ factors }: { factors: Factor[] }) {
