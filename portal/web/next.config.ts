@@ -23,6 +23,14 @@ const config: NextConfig = {
       fallback: [],
     };
   },
+  async headers() {
+    return [
+      {
+        source: '/portal/:path*',
+        headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
+      },
+    ];
+  },
 };
 
 export default config;

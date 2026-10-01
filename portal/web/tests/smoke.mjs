@@ -41,7 +41,26 @@ try {
   }
   const html = await (await fetch(address, { signal: AbortSignal.timeout(5000) })).text();
   assert.match(html, /LEGALTY — Asesoría jurídica y financiera/);
+  assert.match(html, /href="\/portal"/, 'public landing exposes the portal entry link');
+  assert.match(html, /Portal privado/, 'public landing labels the portal entry');
   assert.match(await (await fetch(`${address}/assets/css/main.css`)).text(), /site-header/);
+
+  // Discovery files: robots excludes private/API/payment paths, sitemap is public-only.
+  const robots = await (await fetch(`${address}/robots.txt`, { signal: AbortSignal.timeout(5000) })).text();
+  assert.match(robots, /User-[Aa]gent: \*/);
+  assert.match(robots, /Allow: \//);
+  assert.match(robots, /Disallow: \/portal\//);
+  assert.match(robots, /Disallow: \/api\//);
+  assert.match(robots, /Disallow: \/success/);
+  assert.match(robots, /Disallow: \/failure/);
+  assert.match(robots, /Sitemap: https:\/\/legalty\.lat\/sitemap\.xml/);
+  const sitemap = await (await fetch(`${address}/sitemap.xml`, { signal: AbortSignal.timeout(5000) })).text();
+  for (const url of ['https://legalty.lat/', 'https://legalty.lat/about',
+    'https://legalty.lat/services', 'https://legalty.lat/contact']) {
+    assert.match(sitemap, new RegExp(url.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')), url);
+  }
+  assert.doesNotMatch(sitemap, /\/(portal|api|success|failure)(\/|$)/, 'sitemap must exclude private/API/payment/portal URLs');
+
   const missing = await fetch(`${address}/client/cases`, { signal: AbortSignal.timeout(5000) });
   assert.equal(missing.status, 404);
 
@@ -54,6 +73,7 @@ try {
   // The portal index and login resolve under /portal.
   const portal = await fetch(`${address}/portal`, { redirect: 'manual' });
   assert.equal(portal.status, 200, '/portal');
+  assert.equal(portal.headers.get('x-robots-tag'), 'noindex, nofollow', '/portal X-Robots-Tag');
   assert.match(await portal.text(), /lang="es"/, '/portal');
   const login = await fetch(`${address}/portal/login`);
   assert.equal(login.status, 200, '/portal/login');
@@ -114,7 +134,7 @@ try {
     assert.equal(methodNotAllowed.status, 405, `${route} GET status`);
     assert.equal(methodNotAllowed.headers.get('allow'), 'POST', `${route} Allow header`);
   }
-  console.log('PASS: public root routes and assets, /portal containment, real /api/* method-not-allowed contract, logged-out prefixed redirects, no-store, generic failure, foreign-origin rejection, scoped server');
+  console.log('PASS: public root routes and assets, portal entry link, robots/sitemap discovery files, /portal X-Robots-Tag noindex, /portal containment, real /api/* method-not-allowed contract, logged-out prefixed redirects, no-store, generic failure, foreign-origin rejection, scoped server');
 } finally {
   if (child.exitCode === null) {
     const exited = once(child, 'exit');

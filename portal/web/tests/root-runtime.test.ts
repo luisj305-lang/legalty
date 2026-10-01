@@ -4,8 +4,8 @@ import { readFileSync } from 'node:fs';
 
 const repository = new URL('../../../', import.meta.url);
 const application = new URL('../', import.meta.url);
-const publicInputs = [
-  'index.html', 'about.html', 'services.html', 'contact.html', 'success.html', 'failure.html',
+// Static assets remain byte-identical to the repository-root source.
+const assetInputs = [
   'assets/css/tokens.css', 'assets/css/main.css',
   'assets/js/nav.js', 'assets/js/contact-form.js', 'assets/js/checkout.js', 'assets/js/catalog.js', 'assets/js/carousel.js',
   'assets/fonts/oswald-source-20260906.woff', 'assets/fonts/oswald-200-latin.woff2',
@@ -16,11 +16,19 @@ const publicInputs = [
   'assets/img/legalty-architecture-20260906.jpg',
 ];
 
+// Landing pages intentionally carry SEO metadata (canonical links and the
+// public portal entry) that the legacy repository-root copy does not; their
+// SEO correctness is asserted in seo.test.ts, so only integrity is checked here.
+const htmlInputs = ['index.html', 'about.html', 'services.html', 'contact.html', 'success.html', 'failure.html'];
+
 const read = (base: URL, path: string) => readFileSync(new URL(path, base));
 
 test('root runtime snapshots every public input and retains clean public routes', async () => {
-  for (const path of publicInputs) {
+  for (const path of assetInputs) {
     assert.deepEqual(read(application, `public/${path}`), read(repository, path), path);
+  }
+  for (const path of htmlInputs) {
+    assert.match(read(application, `public/${path}`).toString('utf8'), /lang="es"/, path);
   }
 
   assert.deepEqual(read(application, 'vercel.json'), read(repository, 'vercel.json'));
