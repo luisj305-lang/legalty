@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+  <symbol id="arrow-right" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></symbol>
+  <symbol id="arrow-up" viewBox="0 0 24 24"><path d="M6 18 18 6M6 6h12v12"/></symbol>
+  <symbol id="building" viewBox="0 0 24 24"><path d="M3 21h18M5 21V5l7-2v18M12 8h7v13M8 7v2m0 3v2m0 3v2m7-8h1m-1 4h1m-1 4h1"/></symbol>
+  <symbol id="briefcase" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="14" rx="1"/><path d="M8 7V3h8v4M3 12c5 3 13 3 18 0M10 12v4h4v-4"/></symbol>
+  <symbol id="person" viewBox="0 0 24 24"><circle cx="12" cy="7" r="3.5"/><path d="M4 21v-2a8 8 0 0 1 16 0v2M8 21h8"/></symbol>
+  <symbol id="scales" viewBox="0 0 48 48"><path d="M24 7v32M15 40h18M9 15h30M14 15 7 29h14l-7-14Zm20 0-7 14h14l-7-14ZM7 29c1 8 13 8 14 0m6 0c1 8 13 8 14 0"/><circle cx="24" cy="7" r="2"/></symbol>
+  <symbol id="plan" viewBox="0 0 48 48"><path d="M10 7h23l6 6v28H10V7Zm23 0v7h6M17 31V21m7 10V17m7 14v-8M16 35h16"/></symbol>
+  <symbol id="mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="m3 6 9 7 9-7"/></symbol>
+</svg>

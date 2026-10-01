@@ -1,0 +1,15 @@
+/* Shared visual tokens from the approved architectural homepage. */
+:root {
+  --color-navy: #003366;
+  --color-deep: #132e4b;
+  --color-ink: #19354f;
+  --color-muted: #5e7081;
+  --color-silver: #cad6e0;
+  --color-line: #d6e0e8;
+  --color-light: #f3f6f8;
+  --color-error: #a52a25;
+  --font-body: 'Legalty Open Sans', sans-serif;
+  --font-heading: 'Legalty Oswald', sans-serif;
+  --max-width: 1248px;
+  --gutter: 32px;
+}

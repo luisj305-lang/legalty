@@ -31,12 +31,15 @@ try {
     await new Promise(resolve => setTimeout(resolve, 100));
   }
   assert.ok(address && output.includes('Ready'), `Server not ready: ${output}`);
-  const response = await fetch(address, { signal: AbortSignal.timeout(5000) });
-  assert.equal(response.status, 200);
-  const html = await response.text();
-  assert.match(html, /lang="es"/);
-  assert.match(html, /Acceso para cuentas invitadas/);
-  assert.doesNotMatch(html, /<form\b|<input\b/);
+  for (const path of ['', '/index', '/index.html', '/about', '/about.html', '/services',
+    '/services.html', '/contact', '/contact.html', '/success', '/success.html', '/failure', '/failure.html']) {
+    const response = await fetch(`${address}${path}`, { signal: AbortSignal.timeout(5000) });
+    assert.equal(response.status, 200, path || '/');
+    assert.match(await response.text(), /lang="es"/, path || '/');
+  }
+  const html = await (await fetch(address, { signal: AbortSignal.timeout(5000) })).text();
+  assert.match(html, /LEGALTY — Asesoría jurídica y financiera/);
+  assert.match(await (await fetch(`${address}/assets/css/main.css`)).text(), /site-header/);
   const missing = await fetch(`${address}/client/cases`, { signal: AbortSignal.timeout(5000) });
   assert.equal(missing.status, 404);
   const account = await fetch(`${address}/account`, { redirect: 'manual' });
@@ -78,7 +81,12 @@ try {
       headers: { origin: 'https://foreign.example' }, redirect: 'manual' });
     assert.equal(denied.status, 403);
   }
-  console.log('PASS: logged-out case create/update redirects, no-store, generic failure, foreign-origin rejection, scoped server');
+  for (const route of ['api/contact', 'api/create-preference', 'api/webhook']) {
+    const methodNotAllowed = await fetch(`${address}/${route}`, { signal: AbortSignal.timeout(5000) });
+    assert.equal(methodNotAllowed.status, 405, `${route} GET status`);
+    assert.equal(methodNotAllowed.headers.get('allow'), 'POST', `${route} Allow header`);
+  }
+  console.log('PASS: public root routes and assets, real /api/* method-not-allowed contract, logged-out case create/update redirects, no-store, generic failure, foreign-origin rejection, scoped server');
 } finally {
   if (child.exitCode === null) {
     const exited = once(child, 'exit');
