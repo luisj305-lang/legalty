@@ -4,7 +4,11 @@ Build connected client and staff experiences while preserving the current public
 
 ## Status and next action
 
-Current implementation and proof are recorded in the cumulative task sections below. Historical foundation boundaries remain completed; unfinished checklist items remain pending. Engram mirrors this full document under odd/legalty-client-portal/tasks.
+Current implementation and proof are recorded in the cumulative task sections below. Historical foundation boundaries remain completed; unfinished checklist items remain pending.
+
+### Engram recovery mirror
+
+Canonical recovery index: `odd/legalty-client-portal/tasks`; repository-relative locator: `odd/tasks/legalty-client-portal.md`. Status: pending lossless verification. Existing historical chunk topics must not be treated as a verified reconstruction of this current document until an ordered chunk set is saved and its concatenation is compared exactly with this file.
 
 ## Objective, problem, and scope
 
@@ -431,4 +435,39 @@ Observed verification commands from the architecture map (commands only; this pl
 - Rollback: revert only this work unit's files — `portal/web/lib/site-config.ts`, `portal/web/lib/seo.ts`, `portal/web/app/robots.ts`, `portal/web/app/sitemap.ts`, `portal/web/tests/seo.test.ts`, the `headers()` block in `portal/web/next.config.ts`, the canonical/portal-entry edits in the six `portal/web/public/*.html` files, and the `root-runtime.test.ts`/`smoke.mjs` test updates — preserving the unified runtime, portal security, public routes, and API behavior. No repository-root or dirty root-site file is touched.
 - RDD: native review deferred to the parent under the existing `feature-branch-chain` strategy; this worker ran no review/assess/status action. Global RDD remains enabled; no receipt or approval is claimed. Implementation commit hash is recorded in the Engram mirror after the commit.
 
+## Portal-concept completion roadmap
 
+The three supplied references (`portal-conceptos/legalty-portal-01-dashboard.png`, `portal-conceptos/legalty-portal-02-seguimiento-caso.png`, and `portal-conceptos/legalty-portal-03-servicios-pagos.png`) establish presentation direction only. They expose gaps in the current authorized case detail: a concept-aligned detail hierarchy first, then client-visible progress/activity, documents, communications/appointments/notifications, and services/payments/receipts. They do not authorize sample identities, progress values, milestones, documents, messages, payment records, staff identities, prices, or currencies.
+
+### Ordered roadmap
+
+- [x] ODD-UI-03 — completed as a presentation-only work unit with scoped RED/GREEN and required checks; the only full-suite failure is the independently verified pre-existing root-runtime config-parity baseline.
+- [ ] ODD-05a — Add client-visible milestones and activity only after the ODD-05 model, lifecycle rules, and RLS/client-visibility boundary are designed and verified. This refines the existing ODD-05 scope; it does not create a second stages/activity feature.
+- [ ] ODD-07a — Add private case documents only through the existing ODD-07 storage, authorization, revocation, and traceability scope. This is the concept-driven presentation follow-through, not a separate document domain.
+- [ ] ODD-08a — Add messages, appointments, and notifications through the existing ODD-08 participant-scope, delivery, timezone, and internal-content isolation scope. This is not a new communications feature.
+- [ ] ODD-09a — Add services, payment history, and receipts through the existing ODD-09 catalog, one-time-payment, reconciliation, and receipt scope. Prices and currency must be confirmed before any payable flow or displayed payment record.
+
+### ODD-UI-03: existing authorized case-detail visual alignment
+
+- **Trigger and route rationale:** `/portal/cases/[id]` already resolves one RLS-authorized case through `caseView`; it is the only existing case-detail route and already receives the fields needed for an honest visual alignment. Improve this route before adding new domain modules so the concept direction can be applied without expanding data access, workflows, or navigation.
+- **Scope:** presentation and focused presentation-contract coverage for the existing authorized detail page only. Render only the current trusted case fields: reference, title, status, description, next action, and updated timestamp. Align their hierarchy with the navy/ivory case-detail concept; retain existing authorized links and honest loading/error/not-found behavior.
+- **Explicit non-scope:** no changes to authentication, proxy, Supabase queries, SQL, RLS, permissions, case model, migrations, roles, assignments, API contracts, or provider access. Do not add client names, staff identities, an assigned-professional card, progress percentages, legal-stage milestones, activity entries, documents, message controls, appointments, services, payment history, receipts, notification controls, placeholder links, sample data, prices, or currency.
+- **Logo limitation:** `public/assets/img/legalty-logo-20260906.png` has an unsuitable black baked-in background for the concept header. Do not use it as a transparent/header-ready mark; obtain a suitable asset in a separately scoped decision. The current repository copies are `assets/img/legalty-logo-20260906.png` and `portal/web/public/assets/img/legalty-logo-20260906.png`.
+- **Acceptance:** an authorized user sees the same real case values with a responsive, keyboard-visible, concept-aligned header/content hierarchy; status remains derived from the existing status labels; empty description and next-action states remain honest; no nonexistent navigation or interactive capability is displayed; signed-out, setup-pending, unavailable, and not-found behavior remain unchanged; the route continues to render only the RLS-returned case.
+- **Strict TDD:** before behavioral source, add or extend a focused case-detail presentation contract and record an observed failing RED run that proves the required hierarchy and the absence of invented modules. Implement until the focused GREEN run passes, then make any presentation-only refactor and rerun GREEN. Planning alone is not RED/GREEN evidence.
+- **Verification command candidates:** `node --test portal/web/tests/case-detail-design.test.ts`; `npm.cmd --prefix portal/web run test`; `npm.cmd --prefix portal/web run typecheck`; `npm.cmd --prefix portal/web run build`; `node portal/web/tests/smoke.mjs`; `node --test portal/tests/access-policy.test.cjs`; `npm.cmd test`; and `git diff --check`. If an already-authorized authenticated session is available, inspect the route at desktop and mobile widths; otherwise record visual verification as unavailable rather than claiming it.
+- **Authored-change heuristic:** target approximately 180–280 authored additions plus deletions, excluding generated files. This is advisory, not a reason to omit tests or accessibility work; stop and re-slice before commit if the coherent change exceeds the existing 400-line delivery threshold.
+- **Rollback boundary:** one presentation-only work-unit commit limited to the existing case-detail page, its scoped styles, its focused test, relevant portal documentation, and this ledger entry. Revert only that commit; preserve case data, migrations, RLS, authentication, shared policy, future domain work, concept images, and unrelated dirty root-site work.
+- **Status:** completed and scoped to presentation with an independently verified pre-existing base failure documented below; implementation commit identity is recorded in the follow-up bookkeeping entry.
+
+### ODD-UI-03 writer evidence
+
+- **Branch and implementation identity:** `feature/portal-20-case-detail-design`; implementation commit: pending initial work-unit commit. No native assessment or remote operation was invoked.
+- **RED:** `node --test portal/web/tests/case-detail-design.test.ts` exited 1 before behavioral source, with 0 pass / 2 fail: the page lacked the scoped detail-style import and the stylesheet did not exist.
+- **GREEN and refactor:** the focused contract passed 2/2 after the presentation implementation and again after the readability-only JSX refactor. It verifies the real reference/title/status/updated timestamp/description/next-action hierarchy, honest empty states, no invented modules, responsive navy/ivory styles, and visible focus.
+- **Verification:** focused contract 2/2 pass; `npm.cmd --prefix portal/web run test` 100 pass / 1 fail. The sole failure is `root-runtime.test.ts` byte comparison of `portal/web/vercel.json` with the repository-root `vercel.json`: the root file has `"cleanUrls": true` while the portal copy does not. This pre-existing configuration mismatch is outside this presentation-only boundary. Typecheck, build, loopback smoke, access-policy 9/9, root `npm.cmd test` 5/5, and `git diff --check` all exited 0.
+- **Normalization and scope:** ran path-limited `git add --renormalize` before the suite. No auth, proxy, Supabase, SQL, RLS, permissions, API, model, migration, role, assignment, provider, or concept-image changes were made.
+- **Authored additions plus deletions:** 157 (145 additions, 12 deletions across four owned paths), below the advisory range without omitting coverage or accessibility.
+- **Rollback boundary:** remove only the case-detail page presentation edits, `case-detail.module.css`, focused contract, and this ODD-UI-03 evidence; preserve case data flow, RLS, authentication, shared shell, root-site edits, and all concept images.
+- **Browser QA:** unavailable; no authorized authenticated browser session was used or claimed.
+- **Engram recovery mirror:** remains pending lossless verification; no full task-document mirror is claimed.
