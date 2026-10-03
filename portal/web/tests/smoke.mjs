@@ -70,11 +70,12 @@ try {
     assert.equal(response.status, 404, `${path} must be 404, not a protected copy`);
   }
 
-  // The portal index and login resolve under /portal.
+  // The portal entry redirects directly to the login route.
   const portal = await fetch(`${address}/portal`, { redirect: 'manual' });
-  assert.equal(portal.status, 200, '/portal');
+  assert.equal(portal.status, 307, '/portal');
+  assert.equal(portal.headers.get('location'), '/portal/login', '/portal redirect target');
   assert.equal(portal.headers.get('x-robots-tag'), 'noindex, nofollow', '/portal X-Robots-Tag');
-  assert.match(await portal.text(), /lang="es"/, '/portal');
+  assert.doesNotMatch(await portal.text(), /Portal en desarrollo/, '/portal intermediary content');
   const login = await fetch(`${address}/portal/login`);
   assert.equal(login.status, 200, '/portal/login');
   const loginHtml = await login.text();

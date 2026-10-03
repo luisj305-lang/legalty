@@ -42,3 +42,10 @@ test('login keeps public-home links at / and routes internal links under /portal
   assert.match(page, /href="\/"/, 'public home link preserved');
   assert.doesNotMatch(page, /href="\/login"/, 'no unprefixed login link');
 });
+
+test('portal entry redirects on the server without an intermediary landing', () => {
+  const page = read('../app/portal/page.tsx');
+  assert.match(page, /import\s*{\s*redirect\s*}\s*from\s*'next\/navigation'/);
+  assert.match(page, /redirect\('\/portal\/login'\)/);
+  assert.doesNotMatch(page, /portal-shell|access-card/);
+});

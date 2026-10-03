@@ -471,3 +471,17 @@ The three supplied references (`portal-conceptos/legalty-portal-01-dashboard.png
 - **Rollback boundary:** remove only the case-detail page presentation edits, `case-detail.module.css`, focused contract, and this ODD-UI-03 evidence; preserve case data flow, RLS, authentication, shared shell, root-site edits, and all concept images.
 - **Browser QA:** unavailable; no authorized authenticated browser session was used or claimed.
 - **Engram recovery mirror:** remains pending lossless verification; no full task-document mirror is claimed.
+
+## ODD-UI-04 portal entry redirect
+
+- **Objective:** replace the intermediary `/portal` landing with a server-side redirect to `/portal/login`, preserving the existing login page exactly.
+- **Authorized scope:** `portal/web/app/portal/page.tsx`, the smallest focused route/containment test, and this entry only; no styles, dependencies, auth, proxy, Supabase, SQL/migrations, or login-page changes.
+- **Route/trigger:** a direct `GET /portal` is the portal entry and must redirect to `/portal/login`; strict TDD requires observed focused RED before the source edit, then GREEN and a post-refactor rerun.
+- **Checks and rollback:** run the focused redirect/containment test plus the required portal/root suites and `git diff --check`; rollback only this unit's page, focused test, and ODD-UI-04 ledger changes.
+- **Remote scope:** none; no credentials, browser login, provider/database operation, deployment, push, PR, merge, or review command.
+- **RED:** `node --test portal/web/tests/portal-containment.test.ts` exited 1 before the page edit: 5 pass / 1 fail because `/portal` lacked the `next/navigation` server redirect.
+- **GREEN:** the same focused command passed 6/6 after the page edit; no refactor followed, so no additional refactor run was required.
+- **Checks:** `npm.cmd --prefix portal/web run test` passed 102/102; `npm.cmd --prefix portal/web run typecheck` exited 0; `npm.cmd --prefix portal/web run build` exited 0; `node portal/web/tests/smoke.mjs` passed the loopback `/portal` redirect check; `npm.cmd test` passed 5/5; `git diff --check` exited 0 with only pre-existing CRLF warnings.
+- **Authored count:** 57 additions plus deletions across the four owned paths; no generated files.
+- **Exact rollback paths:** `portal/web/app/portal/page.tsx`, `portal/web/tests/portal-containment.test.ts`, `portal/web/tests/smoke.mjs`, and this ODD-UI-04 entry in `odd/tasks/legalty-client-portal.md` only.
+- **Commit identity:** reported after the one permitted commit; a commit cannot truthfully contain its own final Git hash because the hash includes this documentation entry.
