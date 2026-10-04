@@ -7,7 +7,7 @@ legalty-portal.vercel.app using the existing Vercel session authorized by the us
 Preserve the logo, assets, CSS, remaining content, and private portal behavior.
 
 ## Plan
-- [ ] CTA-01: Apply the minimal homepage change, verify preservation, deploy an
+- [x] CTA-01: Apply the minimal homepage change, verify preservation, deploy an
   isolated production-source candidate, and check the public homepage/login.
 
 ## Routing and constraints
@@ -33,7 +33,7 @@ Preserve the logo, assets, CSS, remaining content, and private portal behavior.
 ## Progress
 - Deployment/project identity verified through the authorized Vercel CLI session.
 - Engram mirror pending: MCP previously rejected ambiguous active sessions.
-- Next: isolate production sources and apply the minimal change.
+- Next: no implementation remaining; await user feedback.
 - All 107 published source files matched local SHA1 before edits. Isolated copy
   contains exactly those 107 files; only public/index.html differs after edits.
 - Non-header homepage bytes unchanged; logo/assets/CSS preserved by source hashes.
@@ -42,4 +42,14 @@ Preserve the logo, assets, CSS, remaining content, and private portal behavior.
   deferred. URL: https://legalty-portal-aoomk4cn3-susotech.vercel.app.
 - Rollback boundary: header-only hunk and new homepage-portal-cta.test.ts; release
   can return to the original production deployment without unrelated edits.
-- Source commit pending; pre-existing hero CTA href change must remain unstaged.
+- Source commit: cc96a2185351d9d045261f28d405daa94fa82863. Only header hunk staged;
+  pre-existing hero CTA href change remains unstaged and was already in production.
+- Full portal test suite: 210 passed, zero failures/skips. Vercel build READY.
+- Candidate source tree: 107 files, only public/index.html differs from baseline.
+- Candidate anonymous URL redirected to Vercel authentication (HTTP 200 login),
+  so that HTTP response was not homepage proof. No protection settings changed.
+- Promoted dpl_4AqNLZjvmgW5182f9WhKg7AJbAtM to production. Public / returns 200
+  and SHA256 exactly matches candidate HTML; header has one portal CTA, no Hablemos.
+- /portal follows to /portal/login with HTTP 200. Public logo SHA256 equals the
+  original asset. Browser visual QA unavailable; authenticated login not exercised.
+- Commit authored count: 71 additions/deletions including task/test; no push or PR.
