@@ -69,7 +69,7 @@ test('contact forwards success and upstream failure without echoing the endpoint
 });
 
 test('create-preference fails closed without credentials and validates the service', async () => {
-  const missingEnv = await route('create-preference', post('/api/create-preference', json({ serviceId: 'invertir' }), { 'content-type': 'application/json' }));
+  const missingEnv = await route('create-preference', post('/api/create-preference', json({ serviceId: 'concepto-complejidad' }), { 'content-type': 'application/json' }));
   assert.equal(missingEnv.status, 503);
   assert.deepEqual(await missingEnv.json(), { error: 'Mercado Pago not configured' });
 
@@ -82,9 +82,36 @@ test('create-preference fails closed without credentials and validates the servi
     assert.equal(unknown.status, 404);
     assert.deepEqual(await unknown.json(), { error: 'service_not_found' });
 
-    const pending = await route('create-preference', post('/api/create-preference', json({ serviceId: 'invertir' }), { 'content-type': 'application/json' }));
+    const pending = await route('create-preference', post('/api/create-preference', json({ serviceId: 'concepto-complejidad' }), { 'content-type': 'application/json' }));
     assert.equal(pending.status, 400);
     assert.deepEqual(await pending.json(), { error: 'Pricing pending for this service' });
+  });
+});
+
+test('create-preference validates booking data and rejects it for non-call services', async () => {
+  await withEnv('MP_ACCESS_TOKEN', 'test-token-not-real', async () => {
+    // The contract is unchanged: the legacy `slotId` field now carries the
+    // appointment id returned by /api/call-booking, so it must remain a UUID.
+    const appointmentId = '11111111-1111-4111-8111-111111111111';
+    const invalid = [
+      { serviceId: 'llamada-30min', slotId: 'not-a-uuid' },
+      { serviceId: 'llamada-30min', slotId: [appointmentId] },
+      { serviceId: 'llamada-30min', clientName: 7 },
+      { serviceId: 'llamada-30min', clientEmail: 'not-an-email' },
+      { serviceId: 'llamada-30min', clientPhone: '!!!' },
+      { serviceId: 'llamada-30min', clientName: '   ' },
+    ];
+    for (const payload of invalid) {
+      const res = await route('create-preference', post('/api/create-preference', json(payload), { 'content-type': 'application/json' }));
+      assert.equal(res.status, 400, json(payload));
+      assert.deepEqual(await res.json(), { error: 'invalid_booking' }, json(payload));
+    }
+
+    for (const serviceId of ['llamada-test', 'concepto-1hora', 'tutela', 'derecho-peticion']) {
+      const res = await route('create-preference', post('/api/create-preference', json({ serviceId, slotId: appointmentId }), { 'content-type': 'application/json' }));
+      assert.equal(res.status, 400, serviceId);
+      assert.deepEqual(await res.json(), { error: 'booking_not_applicable' }, serviceId);
+    }
   });
 });
 

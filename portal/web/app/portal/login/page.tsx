@@ -1,4 +1,4 @@
-﻿import { login } from './actions';
+import { login } from './actions';
 import './login.css';
 
 export const dynamic = 'force-dynamic';

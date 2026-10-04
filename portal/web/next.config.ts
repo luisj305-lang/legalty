@@ -10,6 +10,7 @@ const publicRouteRewrites = [
   { source: '/contact', destination: '/contact.html' },
   { source: '/success', destination: '/success.html' },
   { source: '/failure', destination: '/failure.html' },
+  { source: '/citas', destination: '/citas.html' },
 ];
 
 const config: NextConfig = {

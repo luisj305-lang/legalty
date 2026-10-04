@@ -1,0 +1,203 @@
+/* Calendar and weekly-schedule layout for the call availability admin page. */
+
+.weekGrid {
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.weekRow {
+  display: grid;
+  grid-template-columns: 160px minmax(0, 1fr);
+  gap: 16px;
+  padding: 16px 0;
+  border-top: 1px solid #384961;
+}
+
+.weekday {
+  font-weight: 600;
+  color: #dce6f5;
+}
+
+.rangeList {
+  padding: 0;
+  margin: 0 0 10px;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.rangeItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.rangeTime {
+  font-variant-numeric: tabular-nums;
+  color: #dce6f5;
+}
+
+.inlineForm {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.inlineForm label {
+  display: grid;
+  gap: 4px;
+  font-size: 12px;
+  color: #bdc9da;
+}
+
+.inlineForm input {
+  padding: 8px;
+}
+
+.inlineForm button,
+.rangeItem button {
+  margin-top: 0;
+  padding: 8px 12px;
+}
+
+.calendarWrap {
+  margin-top: 12px;
+  overflow-x: auto;
+}
+
+.calendar {
+  width: 100%;
+  min-width: 560px;
+  border-collapse: collapse;
+}
+
+.calendar caption {
+  text-align: left;
+  padding-bottom: 10px;
+  color: #bdc9da;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+.calendar th {
+  padding: 8px;
+  text-align: center;
+  font-size: 12px;
+  color: #9fbbdf;
+  border-bottom: 1px solid #384961;
+}
+
+.calendar td {
+  vertical-align: top;
+  width: 14.28%;
+  height: 74px;
+  padding: 8px;
+  border: 1px solid #2b3a51;
+}
+
+.calendarDay {
+  display: block;
+  font-variant-numeric: tabular-nums;
+  color: #dce6f5;
+}
+
+.calendarStatus {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  border-radius: 20px;
+  padding: 2px 8px;
+  border: 1px solid #667f9e;
+  color: #c6ddf9;
+}
+
+.swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  border: 1px solid #667f9e;
+  display: inline-block;
+}
+
+.statusBlocked {
+  color: #ffc9c9;
+  border-color: #8a5050;
+  background: #2a1720;
+}
+
+.statusBooked {
+  color: #f1d49c;
+  border-color: #8a744f;
+  background: #2a2417;
+}
+
+.statusFree {
+  color: #b2ddc6;
+  border-color: #507963;
+  background: #16261e;
+}
+
+.legend {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+  font-size: 12px;
+  color: #bdc9da;
+}
+
+.legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.appointmentList {
+  padding: 0;
+  margin: 12px 0 0;
+  list-style: none;
+}
+
+.appointment {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 20px 0;
+  border-top: 1px solid #384961;
+  flex-wrap: wrap;
+}
+
+.appointmentMeta {
+  display: grid;
+  gap: 4px;
+}
+
+.appointmentMeta time {
+  color: #acbcd2;
+}
+
+.appointmentContact {
+  margin: 4px 0 0;
+  color: #bac8da;
+  overflow-wrap: anywhere;
+}
+
+.appointmentActions {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 800px) {
+  .weekRow {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}

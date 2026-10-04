@@ -136,3 +136,124 @@
   .caseMeta { justify-items: start; }
   .footer { padding: 16px 18px; }
 }
+
+.contactsPanel { margin-top: 24px; }
+.contactList { margin: 0; padding: 0; list-style: none; }
+.contactRow { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 24px; padding: 22px 0; border-top: 1px solid var(--line); }
+.contactRow:first-child { border-top: 0; }
+.contactIdentity { display: grid; align-content: start; gap: 4px; }
+.contactIdentity strong { color: var(--ink); font-size: 17px; }
+.contactIdentity span { color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
+.contactForm { display: grid; gap: 14px; }
+.contactForm label { display: grid; gap: 6px; font-weight: 700; font-size: 12px; }
+.contactForm input { width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid #9eafbd; color: var(--ink); background: #fff; font: inherit; }
+.contactForm button { justify-self: start; margin: 0; color: #fff; background: var(--navy); }
+.formSuccess { margin: 0 0 22px; padding: 14px; border-left: 4px solid #2e654d; color: #24543f; background: #edf8f2; }
+
+@media (max-width: 800px) {
+  .contactRow { grid-template-columns: 1fr; gap: 16px; }
+}
+
+.multiField { display: grid; gap: 8px; }
+.multiControlBox { position: relative; }
+.multiControl {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 48px;
+  padding: 7px 10px;
+  border: 1px solid #9eafbd;
+  color: var(--ink);
+  background: #fff;
+  cursor: text;
+}
+.multiControl:focus-within { border-color: var(--navy); }
+.multiControlDisabled { background: #f1f4f5; cursor: not-allowed; opacity: .75; }
+.multiChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  padding: 4px 6px 4px 10px;
+  border: 1px solid #7c9ab2;
+  color: #174e78;
+  background: #edf5fa;
+  font-size: 13px;
+}
+.multiChipText { overflow-wrap: anywhere; }
+.caseForm .multiChipRemove {
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  color: #174e78;
+  background: transparent;
+  font: inherit;
+  line-height: 1;
+  cursor: pointer;
+}
+.caseForm .multiChipRemove:hover { background: #d7e6f1; }
+.caseForm .multiChipRemove:disabled { cursor: not-allowed; opacity: .5; }
+.caseForm .multiSearch {
+  flex: 1 1 120px;
+  width: auto;
+  min-width: 120px;
+  margin: 0;
+  padding: 6px 4px;
+  border: 0;
+  border-radius: 0;
+  color: var(--ink);
+  background: transparent;
+  font: inherit;
+  appearance: none;
+}
+.caseForm .multiSearch:focus { outline: none; }
+.multiList {
+  position: absolute;
+  z-index: 20;
+  top: 100%;
+  left: 0;
+  right: 0;
+  max-height: 280px;
+  margin: 4px 0 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+  border: 1px solid var(--line);
+  background: #fff;
+  box-shadow: 0 8px 24px #153b5910;
+}
+.multiOption {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  color: var(--ink);
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+.multiOptionActive { background: #eef3f6; }
+.multiOptionSelected { color: var(--navy); font-weight: 700; }
+.multiOptionCheck {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 16px;
+  color: var(--navy);
+}
+.multiOptionLabel { min-width: 0; }
+.multiNoResults, .multiEmpty { margin: 0; color: var(--muted); line-height: 1.5; }
+.multiNoResults { padding: 12px 14px; list-style: none; }
+
+@media (max-width: 560px) {
+  .multiControl { min-height: 44px; }
+  .caseForm .multiSearch { flex-basis: 100%; min-width: 0; }
+  .multiList { max-height: 220px; }
+}

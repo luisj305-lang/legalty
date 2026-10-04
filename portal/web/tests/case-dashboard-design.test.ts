@@ -10,10 +10,13 @@ const optionalSource = (path: string) => {
 
 test('authenticated shell exposes only working navigation and logout', () => {
   const layout = source('../app/portal/cases/layout.tsx');
+  const nav = source('../lib/cases/nav.ts');
   assert.match(layout, /import styles from ['"]\.\/cases\.module\.css['"]/);
-  assert.match(layout, /href="\/portal\/cases"[^>]*aria-current="page"/);
-  assert.match(layout, /href="\/portal\/setup\/password"/);
-  assert.match(layout, /href="\/portal\/setup\/mfa"/);
+  assert.match(layout, /navItems\(role\)/);
+  assert.match(layout, /aria-current="page"/);
+  assert.match(nav, /href: '\/portal\/cases'/);
+  assert.match(nav, /href: '\/portal\/setup\/password'/);
+  assert.match(nav, /href: '\/portal\/setup\/mfa'/);
   assert.match(layout, /action=\{logout\}/);
   assert.doesNotMatch(layout, /href="#"|\/documents|\/messages|\/appointments|\/services|\/payments/);
 });
@@ -22,8 +25,8 @@ test('authenticator setup is consistently optional without removing enrollment',
   const account = source('../app/portal/account/page.tsx');
   const password = source('../app/portal/setup/password/page.tsx');
   const mfa = source('../app/portal/setup/mfa/page.tsx');
-  const layout = source('../app/portal/cases/layout.tsx');
-  for (const page of [account, password, mfa, layout]) assert.match(page, /autenticador opcional/i);
+  const nav = source('../lib/cases/nav.ts');
+  for (const page of [account, password, mfa, nav]) assert.match(page, /autenticador opcional/i);
   assert.doesNotMatch(password, /antes del cambio/i);
   assert.match(mfa, /<MfaForm factors=/);
 });

@@ -31,7 +31,14 @@ test('root runtime snapshots every public input and retains clean public routes'
     assert.match(read(application, `public/${path}`).toString('utf8'), /lang="es"/, path);
   }
 
-  assert.deepEqual(read(application, 'vercel.json'), read(repository, 'vercel.json'));
+  // The portal is a Next app: `cleanUrls` conflicts with its `beforeFiles`
+  // rewrites (the clean URL 308-loops into a 404), so the portal must NOT set
+  // it even though the static root project relies on it. Headers stay shared.
+  const portalVercel = JSON.parse(read(application, 'vercel.json').toString('utf8'));
+  const rootVercel = JSON.parse(read(repository, 'vercel.json').toString('utf8'));
+  assert.equal(portalVercel.cleanUrls, undefined);
+  assert.equal(rootVercel.cleanUrls, true);
+  assert.deepEqual(portalVercel.headers, rootVercel.headers);
   const config = (await import('../next.config.ts')).default;
   const rewrites = await (config.rewrites as () => Promise<{ beforeFiles: { source: string; destination: string }[] }>)();
   assert.deepEqual(rewrites.beforeFiles, [
@@ -42,6 +49,7 @@ test('root runtime snapshots every public input and retains clean public routes'
     { source: '/contact', destination: '/contact.html' },
     { source: '/success', destination: '/success.html' },
     { source: '/failure', destination: '/failure.html' },
+    { source: '/citas', destination: '/citas.html' },
   ]);
   assert.ok(!Object.hasOwn(config, 'basePath'));
 });

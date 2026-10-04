@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Agende una llamada de 30 o 45 minutos con LEGALTY. Elija el servicio y uno de los horarios disponibles.">
+  <title>Agendar llamada — LEGALTY</title>
+  <link rel="canonical" href="https://legalty.lat/citas">
+  <link rel="stylesheet" href="assets/css/tokens.css"><link rel="stylesheet" href="assets/css/main.css">
+  <script src="assets/js/nav.js" defer></script>
+  <script src="assets/js/booking.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Ir al contenido principal</a>
+  <header class="site-header"><div class="container site-header__inner">
+    <a class="site-logo" href="index.html" aria-label="LEGALTY — Inicio"><img src="assets/img/legalty-logo-20260906.png" width="4329" height="921" alt="LEGALTY Servicios Jurídicos Integrales S.A.S."></a>
+    <nav class="site-nav" aria-label="Navegación principal"><ul class="site-nav__list">
+      <li><a class="site-nav__link" href="index.html">Inicio</a></li><li><a class="site-nav__link" href="services.html">Servicios</a></li><li><a class="site-nav__link" href="about.html">Nosotros</a></li><li><a class="site-nav__link" href="services.html#pagos">Pagar servicios</a></li><li><a class="site-nav__link" href="/portal">Portal privado</a></li>
+      <li><a class="site-nav__link nav-cta" href="contact.html#contact-form">Hablemos <svg class="arrow" aria-hidden="true"><use href="assets/img/ui-20260906.svg#arrow-up"/></svg></a></li>
+    </ul></nav>
+  </div></header>
+  <main id="main-content">
+    <section class="page-intro"><div class="container">
+      <p class="eyebrow">Agendamiento de llamadas</p>
+      <h1>Elija el servicio y el horario de su llamada.</h1>
+      <p>Seleccione una llamada de 30 o 45 minutos, uno de los horarios disponibles y sus datos de contacto. Al continuar registraremos su cita y luego lo llevaremos a Mercado Pago para completar el pago.</p>
+    </div></section>
+    <section class="page-section"><div class="container reading-width">
+      <div class="notice"><p><strong>Importante:</strong> al continuar reservamos su horario y la cita queda registrada como pendiente de pago. La cita se confirma cuando el pago sea aprobado; si no completa el pago, escríbanos a <a href="mailto:legaltyceo@gmail.com">legaltyceo@gmail.com</a> para liberar el horario. Si no hay horarios disponibles, escriba a <a href="mailto:legaltyceo@gmail.com">legaltyceo@gmail.com</a> para coordinar su llamada.</p></div>
+      <form class="contact-form" id="booking-form" novalidate>
+        <div class="form-field">
+          <label class="form-label" for="booking-service">Servicio</label>
+          <select class="form-input" id="booking-service" name="service" required>
+            <option value="">Seleccione un servicio</option>
+            <option value="llamada-30min">Llamada telefónica 30 min — $50.000 COP</option>
+            <option value="llamada-45min">Llamada telefónica 45 min — $100.000 COP</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="booking-slot">Horario disponible</label>
+          <select class="form-input" id="booking-slot" name="slot" required disabled>
+            <option value="">Cargando horarios…</option>
+          </select>
+          <p class="form-help" id="slots-status" role="status" aria-live="polite">Cargando horarios disponibles…</p>
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="booking-name">Nombre completo</label>
+          <input class="form-input" id="booking-name" name="clientName" type="text" autocomplete="name" maxlength="120" required>
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="booking-email">Correo electrónico</label>
+          <input class="form-input" id="booking-email" name="clientEmail" type="email" autocomplete="email" maxlength="254" required>
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="booking-phone">Teléfono</label>
+          <input class="form-input" id="booking-phone" name="clientPhone" type="tel" autocomplete="tel" maxlength="40" required>
+        </div>
+        <div class="form-actions">
+          <button class="button button-navy" type="submit" id="booking-continue" disabled>Continuar al pago</button>
+        </div>
+        <p class="form-status checkout-note checkout-note--pending" id="booking-result" role="status" aria-live="polite" hidden></p>
+      </form>
+      <noscript><div class="notice"><p>Active JavaScript para ver los horarios disponibles. También puede escribir a <a href="mailto:legaltyceo@gmail.com">legaltyceo@gmail.com</a> para coordinar su llamada.</p></div></noscript>
+    </div></section>
+  </main>
+  <footer class="site-footer"><div class="container"><div class="site-footer__inner">
+    <a class="site-logo" href="index.html" aria-label="LEGALTY — Inicio"><img src="assets/img/legalty-logo-20260906.png" width="4329" height="921" alt="LEGALTY Servicios Jurídicos Integrales S.A.S."></a>
+    <nav class="footer-links" aria-label="Navegación del pie de página"><a href="services.html">Servicios</a><a href="about.html">Nosotros</a><a href="services.html#pagos">Pagar servicios</a><a href="/citas">Agendar llamada</a><a href="contact.html">Contacto</a></nav>
+  </div><div class="site-footer__bottom"><p>© 2026 LEGALTY. Todos los derechos reservados.</p><p>Asesoría jurídica · Financiera · Patrimonial</p></div></div></footer>
+</body>
+</html>

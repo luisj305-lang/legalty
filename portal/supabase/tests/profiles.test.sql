@@ -27,13 +27,38 @@ select throws_ok($$update public.profiles set id = null$$, '23502', null, 'Null 
 select throws_ok($$insert into public.profiles (id, role) values
   ('11111111-1111-4111-8111-111111111111', 'client')$$, '23505', null, 'Duplicate identity rejected');
 
+-- Split profile names and phone are optional, but when present they must be nonblank and bounded.
+select lives_ok($$update public.profiles set first_name = 'Ana', last_name = 'Cliente', phone = '+506 8888 8888'
+  where role = 'client'$$, 'Valid trimmed names and phone accepted');
+select lives_ok($$update public.profiles set first_name = null, last_name = null, phone = null where role = 'client'$$,
+  'Null names and phone accepted');
+select throws_ok($$update public.profiles set first_name = ''$$, '23514', null, 'Empty first_name rejected');
+select throws_ok($$update public.profiles set first_name = repeat(' ', 5)$$, '23514', null,
+  'Whitespace-only first_name rejected');
+select throws_ok($$update public.profiles set first_name = repeat('a', 121)$$, '23514', null,
+  'Over-long first_name rejected');
+select lives_ok($$update public.profiles set first_name = repeat('a', 120)$$, 'Boundary-length first_name accepted');
+select throws_ok($$update public.profiles set last_name = ''$$, '23514', null, 'Empty last_name rejected');
+select throws_ok($$update public.profiles set last_name = repeat(' ', 5)$$, '23514', null,
+  'Whitespace-only last_name rejected');
+select throws_ok($$update public.profiles set last_name = repeat('a', 121)$$, '23514', null,
+  'Over-long last_name rejected');
+select lives_ok($$update public.profiles set last_name = repeat('a', 120)$$, 'Boundary-length last_name accepted');
+select throws_ok($$update public.profiles set phone = ''$$, '23514', null, 'Empty phone rejected');
+select throws_ok($$update public.profiles set phone = repeat(' ', 5)$$, '23514', null,
+  'Whitespace-only phone rejected');
+select throws_ok($$update public.profiles set phone = repeat('9', 33)$$, '23514', null,
+  'Over-long phone rejected');
+select lives_ok($$update public.profiles set phone = repeat('9', 32)$$, 'Boundary-length phone accepted');
+update public.profiles set first_name = null, last_name = null, phone = null where role = 'client';
+
 -- Every client-facing table/column write privilege must be absent, not merely blocked by RLS.
 select ok(not has_table_privilege(r, 'public.profiles', p), r || ' lacks ' || p)
 from unnest(array['anon', 'authenticated']) r
 cross join unnest(array['INSERT', 'UPDATE', 'DELETE', 'TRUNCATE', 'REFERENCES', 'TRIGGER']) p;
 select ok(not has_column_privilege(r, 'public.profiles', c, p), r || ' lacks ' || p || ' ' || c)
 from unnest(array['anon', 'authenticated']) r
-cross join unnest(array['id', 'role', 'active', 'must_change_password']) c
+cross join unnest(array['id', 'role', 'active', 'must_change_password', 'first_name', 'last_name', 'phone']) c
 cross join unnest(array['INSERT', 'UPDATE', 'REFERENCES']) p;
 select ok(not exists (select 1 from pg_class, lateral aclexplode(relacl) acl
   where oid = 'public.profiles'::regclass and acl.grantee = 0), 'No PUBLIC table grants');
